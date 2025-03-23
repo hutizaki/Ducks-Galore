@@ -1,10 +1,9 @@
 {
 	"credit": "Designed by Salvador ---- github/salvadormg15 ---- Rebranded by Hutizaki",
-	"parent": "block/block",
+	"parent": "minecraft:block/cube_all",
 	"ambientocclusion": false,
 	"textures": {
-		"0": "ducksgalore:block/default_duck",
-		"particle": "ducksgalore:block/default_duck"
+		"all": "ducksgalore:block/default_duck"
 	},
 	"elements": [
 		{

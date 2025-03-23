@@ -1,8 +1,9 @@
 {  
-"block.ducksgalore.default_duck": "Duck Block",  
-"item.ducksgalore.default_duck": "Duck",  
+"block.ducksgalore.default_duck": "Bloque de Pato",  
+"item.ducksgalore.default_duck": "Pato",  
 
-	"duck_use": "Duck Sound",
-    "duck_use.sub": "Duck Sound",
-    "duck_place": "Duck Place Sound",
-    "duck_place.sub": "Duck Place Sound"
+"duck_use": "Pato Grazna",
+"duck_use.sub": "Graznido de Pato",
+"duck_place": "Pato Colocado",
+"duck_place.sub": "Colocación de Pato"
+}

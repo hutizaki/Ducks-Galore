@@ -1,21 +1,51 @@
 {
     "duck_place": {
-        "category":"block",
-        "subtitle":"duck_place.sub",
+        "category": "blocks",
+        "subtitle": "duck_place.sub",
         "sounds": [
             {
-                "name": "ducksgalore:duck_place"
+                "name": "ducksgalore:duck_place",
+                "volume": 0.8,
+                "pitch": 1.0,
+                "weight": 1
             }
         ]
     },
     "duck_use": {
-        "category":"block",
-        "subtitle":"duck_use.sub",
-        "sounds":[
+        "category": "blocks",
+        "subtitle": "duck_use.sub",
+        "sounds": [
             {
-                "name":"ducksgalore:duck_use"
+                "name": "ducksgalore:duck_use",
+                "volume": 1.0,
+                "pitch": 1.0,
+                "weight": 1,
+                "stream": false
+            }
+        ]
+    },
+    "rubber_duck_quack": {
+        "category": "blocks",
+        "subtitle": "rubber_duck_quack.sub",
+        "sounds": [
+            {
+                "name": "ducksgalore:rubber_duck_quack",
+                "volume": 1.0,
+                "pitch": 1.0,
+                "weight": 1
+            }
+        ]
+    },
+    "golden_duck_quack": {
+        "category": "blocks",
+        "subtitle": "golden_duck_quack.sub",
+        "sounds": [
+            {
+                "name": "ducksgalore:golden_duck_quack",
+                "volume": 1.0,
+                "pitch": 0.8,
+                "weight": 1
             }
         ]
     }
-
 }
