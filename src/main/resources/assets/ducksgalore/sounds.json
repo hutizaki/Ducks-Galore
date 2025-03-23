@@ -28,12 +28,21 @@
         "category": "blocks",
         "subtitle": "rubber_duck_quack.sub",
         "sounds": [
-            {
-                "name": "ducksgalore:rubber_duck_quack",
-                "volume": 1.0,
-                "pitch": 1.0,
-                "weight": 1
-            }
+            "ducksgalore:rubber_duck_quack"
+        ]
+    },
+    "rubber_duck_place": {
+        "category": "blocks",
+        "subtitle": "rubber_duck_place.sub",
+        "sounds": [
+            "ducksgalore:rubber_duck_place"
+        ]
+    },
+    "rubber_duck_break": {
+        "category": "blocks",
+        "subtitle": "rubber_duck_break.sub",
+        "sounds": [
+            "ducksgalore:rubber_duck_break"
         ]
     },
     "golden_duck_quack": {

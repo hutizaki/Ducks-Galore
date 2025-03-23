@@ -1,7 +1,6 @@
 package com.hutizaki.ducksgalore;
 
 import com.hutizaki.ducksgalore.registry.RegistryHandler;
-import com.hutizaki.ducksgalore.data.DataGenerators;
 
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
@@ -24,7 +23,6 @@ public class DucksGalore {
         
         // Register mod event bus handlers
         modEventBus.addListener(this::setup);
-        modEventBus.addListener(DataGenerators::gatherData);
     }
     
     private void setup(final FMLCommonSetupEvent event) {
