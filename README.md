@@ -1069,3 +1069,110 @@ To implement these extensive features, consider the following development roadma
    - Polish and optimize all duck systems
 
 By implementing these features progressively, the Duck's Galore mod can evolve into a comprehensive duck-themed gameplay expansion that provides unique and engaging content for players at all stages of the game.
+
+## Rubber Duck Block Implementation Details
+
+The rubber duck block is a decorative block that adds a playful element to Minecraft. Here's a detailed breakdown of its features and implementation:
+
+### Features
+
+1. **Directional Placement**
+   - The duck automatically faces the player when placed
+   - Only supports cardinal directions (north, east, south, west)
+   - Uses `HorizontalDirectionalBlock` for rotation handling
+
+2. **Custom Hitbox**
+   - Precise hitbox that matches the duck's shape
+   - Different hitbox for each facing direction
+   - Components include:
+     - Body (main base)
+     - Head
+     - Beak
+     - Wings (left and right)
+     - Tail
+
+3. **Sound Effects**
+   - Quack sound when right-clicked
+   - Place sound when the block is placed
+   - Break sound when the block is broken
+   - Random pitch variation for natural feel
+
+4. **Visual Properties**
+   - Non-occluding block (transparent to nearby blocks)
+   - Custom model with detailed duck shape
+   - Yellow break particles
+
+### Technical Implementation
+
+1. **Block Class Structure**
+   ```java
+   public class RubberDuckBlock extends HorizontalDirectionalBlock {
+       // Direction property for rotation
+       public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
+       
+       // Custom hitbox shapes for each direction
+       private static final VoxelShape SHAPE_NORTH = Shapes.or(...);
+       private static final VoxelShape SHAPE_EAST = Shapes.or(...);
+       private static final VoxelShape SHAPE_SOUTH = Shapes.or(...);
+       private static final VoxelShape SHAPE_WEST = Shapes.or(...);
+   }
+   ```
+
+2. **Hitbox Definition**
+   - Uses `VoxelShape` for precise collision detection
+   - Each direction has its own shape definition
+   - Shapes are composed of multiple `Block.box()` calls for different parts
+
+3. **Sound Implementation**
+   ```java
+   @Override
+   public InteractionResult use(BlockState state, Level level, BlockPos pos, 
+                              Player player, InteractionHand hand, BlockHitResult hit) {
+       if (hand == InteractionHand.MAIN_HAND) {
+           level.playSound(null, pos, AllSoundEvents.RUBBER_DUCK_QUACK.get(), 
+                         SoundSource.BLOCKS, 1.0F, 
+                         level.random.nextFloat() * 0.2F + 0.9F);
+           return InteractionResult.sidedSuccess(level.isClientSide);
+       }
+       return InteractionResult.PASS;
+   }
+   ```
+
+4. **Resource Files**
+   - Block Model: `assets/ducksgalore/models/block/rubber_duck/block.json`
+   - Block State: `assets/ducksgalore/blockstates/rubber_duck.json`
+   - Sound Events: `assets/ducksgalore/sounds.json`
+   - Textures: `assets/ducksgalore/textures/block/rubber_duck.png`
+
+### Usage
+
+1. **Placement**
+   - Place the duck on any solid surface
+   - The duck will automatically face the player
+   - Can be rotated by breaking and replacing
+
+2. **Interaction**
+   - Right-click to hear the quack sound
+   - Break to collect the block
+   - Place to set it down with a placement sound
+
+3. **Technical Notes**
+   - The block is non-occluding, allowing for creative placement
+   - Hitbox matches the visual model for accurate interaction
+   - Sound effects play for all nearby players
+
+### Future Enhancements
+
+1. **Potential Features**
+   - Water interaction (floating on water)
+   - Animation when quacking
+   - Different colored variants
+   - Special effects when placed in water
+
+2. **Integration Possibilities**
+   - Redstone interaction
+   - Special effects when near other ducks
+   - Custom particle effects
+   - Special drops or crafting recipes
+
+This implementation provides a solid foundation for the rubber duck block while maintaining Minecraft's vanilla feel and mechanics.
