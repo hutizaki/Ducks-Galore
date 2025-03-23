@@ -1,7 +1,15 @@
 {  
 "block.ducksgalore.rubber_duck": "Rubber Duck Block",
 "item.ducksgalore.rubber_duck": "Rubber Duck",
+"block.ducksgalore.golden_rubber_duck": "Golden Rubber Duck Block",
+"item.ducksgalore.golden_rubber_duck": "Golden Rubber Duck",
+"item.ducksgalore.golden_rubber_duck.tooltip": "Grants Absorption when used",
+"golden_rubber_duck_quack": "Golden Rubber Duck Quacks",
+"golden_rubber_duck_place": "Golden Rubber Duck Placed",
+"golden_rubber_duck_break": "Golden Rubber Duck Broken",
 "itemGroup.ducksgalore.ducks_tab": "Ducks Galore",
 "rubber_duck_quack": "Rubber Duck Quacks",
-"rubber_duck_quack.sub": "Rubber Duck Quacking"
+"rubber_duck_quack.sub": "Rubber Duck Quacking",
+"rubber_duck_place.sub": "Rubber Duck Placed",
+"rubber_duck_break.sub": "Rubber Duck Broken"
 }

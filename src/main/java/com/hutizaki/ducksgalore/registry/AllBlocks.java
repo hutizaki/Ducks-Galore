@@ -2,9 +2,8 @@ package com.hutizaki.ducksgalore.registry;
 
 import com.hutizaki.ducksgalore.DucksGalore;
 import com.hutizaki.ducksgalore.content.ducks.blocks.RubberDuckBlock;
+import com.hutizaki.ducksgalore.content.ducks.blocks.GoldenRubberDuckBlock;
 
-import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockBehaviour;
@@ -24,20 +23,15 @@ public class AllBlocks {
     public static final RegistryObject<Block> RUBBER_DUCK = registerBlock("rubber_duck",
         () -> new RubberDuckBlock(BlockBehaviour.Properties.copy(Blocks.YELLOW_WOOL)));
     
-    /**
-     * Helper method to register a block with a corresponding item
-     */
-    private static <T extends Block> RegistryObject<T> registerBlock(String name, Supplier<T> block) {
-        RegistryObject<T> registeredBlock = BLOCKS.register(name, block);
-        registerBlockItem(name, registeredBlock);
-        return registeredBlock;
-    }
+    // Register golden rubber duck block
+    public static final RegistryObject<Block> GOLDEN_RUBBER_DUCK = registerBlock("golden_rubber_duck",
+        () -> new GoldenRubberDuckBlock(BlockBehaviour.Properties.copy(Blocks.GOLD_BLOCK)));
     
     /**
-     * Helper method to register a block item
+     * Helper method to register a block without automatically registering an item
      */
-    private static <T extends Block> void registerBlockItem(String name, RegistryObject<T> block) {
-        AllItems.ITEMS.register(name, () -> new BlockItem(block.get(), new Item.Properties()));
+    private static <T extends Block> RegistryObject<T> registerBlock(String name, Supplier<T> block) {
+        return BLOCKS.register(name, block);
     }
     
     /**

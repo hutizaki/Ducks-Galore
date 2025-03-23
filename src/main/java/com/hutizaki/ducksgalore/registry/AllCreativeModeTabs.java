@@ -24,6 +24,7 @@ public class AllCreativeModeTabs {
             .icon(() -> new ItemStack(AllBlocks.RUBBER_DUCK.get()))
             .displayItems((parameters, output) -> {
                 output.accept(AllBlocks.RUBBER_DUCK.get());
+                output.accept(AllBlocks.GOLDEN_RUBBER_DUCK.get());
             })
             .build());
 
@@ -40,6 +41,7 @@ public class AllCreativeModeTabs {
     public static void addToTabs(BuildCreativeModeTabContentsEvent event) {
         if (event.getTabKey() == CreativeModeTabs.FUNCTIONAL_BLOCKS) {
             event.accept(AllBlocks.RUBBER_DUCK.get());
+            event.accept(AllBlocks.GOLDEN_RUBBER_DUCK.get());
         }
     }
 } 

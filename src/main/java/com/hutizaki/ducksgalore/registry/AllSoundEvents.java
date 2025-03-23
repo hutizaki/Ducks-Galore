@@ -18,6 +18,9 @@ public class AllSoundEvents {
     public static final RegistryObject<SoundEvent> RUBBER_DUCK_QUACK = registerSoundEvent("rubber_duck_quack");
     public static final RegistryObject<SoundEvent> RUBBER_DUCK_PLACE = registerSoundEvent("rubber_duck_place");
     public static final RegistryObject<SoundEvent> RUBBER_DUCK_BREAK = registerSoundEvent("rubber_duck_break");
+    public static final RegistryObject<SoundEvent> GOLDEN_DUCK_QUACK = registerSoundEvent("golden_duck_quack");
+    public static final RegistryObject<SoundEvent> GOLDEN_RUBBER_DUCK_PLACE = registerSoundEvent("golden_rubber_duck_place");
+    public static final RegistryObject<SoundEvent> GOLDEN_RUBBER_DUCK_BREAK = registerSoundEvent("golden_rubber_duck_break");
 
     /**
      * Helper method to register a sound event
