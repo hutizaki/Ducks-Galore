@@ -1,9 +1,7 @@
 package com.hutizaki.ducksgalore.registry;
 
 import com.hutizaki.ducksgalore.DucksGalore;
-import com.hutizaki.ducksgalore.content.ducks.blocks.DuckBlock;
 import com.hutizaki.ducksgalore.content.ducks.blocks.RubberDuckBlock;
-import com.hutizaki.ducksgalore.content.ducks.blocks.special.GoldenDuckBlock;
 
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
@@ -22,22 +20,14 @@ public class AllBlocks {
     public static final DeferredRegister<Block> BLOCKS = 
         DeferredRegister.create(ForgeRegistries.BLOCKS, DucksGalore.MOD_ID);
     
-    // Register default duck block
-    public static final RegistryObject<Block> DEFAULT_DUCK = registerBlock("default_duck",
-        () -> new DuckBlock());
-    
     // Register rubber duck block
     public static final RegistryObject<Block> RUBBER_DUCK = registerBlock("rubber_duck",
         () -> new RubberDuckBlock(BlockBehaviour.Properties.copy(Blocks.YELLOW_WOOL)));
     
-    // Register golden duck block
-    public static final RegistryObject<Block> GOLDEN_DUCK = registerBlock("golden_duck",
-        () -> new GoldenDuckBlock(BlockBehaviour.Properties.copy(Blocks.GOLD_BLOCK)));
-    
     /**
      * Helper method to register a block with a corresponding item
      */
-    public static <T extends Block> RegistryObject<T> registerBlock(String name, Supplier<T> block) {
+    private static <T extends Block> RegistryObject<T> registerBlock(String name, Supplier<T> block) {
         RegistryObject<T> registeredBlock = BLOCKS.register(name, block);
         registerBlockItem(name, registeredBlock);
         return registeredBlock;

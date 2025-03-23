@@ -21,11 +21,9 @@ public class AllCreativeModeTabs {
     public static final RegistryObject<CreativeModeTab> DUCKS_TAB = CREATIVE_MODE_TABS.register("ducks_tab",
         () -> CreativeModeTab.builder()
             .title(Component.translatable("itemGroup." + DucksGalore.MOD_ID + ".ducks_tab"))
-            .icon(() -> new ItemStack(AllItems.DEFAULT_DUCK_ITEM.get()))
+            .icon(() -> new ItemStack(AllBlocks.RUBBER_DUCK.get()))
             .displayItems((parameters, output) -> {
-                output.accept(AllItems.DEFAULT_DUCK_ITEM.get());
-                output.accept(AllItems.RUBBER_DUCK_ITEM.get());
-                output.accept(AllItems.GOLDEN_DUCK_ITEM.get());
+                output.accept(AllBlocks.RUBBER_DUCK.get());
             })
             .build());
 
@@ -41,9 +39,7 @@ public class AllCreativeModeTabs {
      */
     public static void addToTabs(BuildCreativeModeTabContentsEvent event) {
         if (event.getTabKey() == CreativeModeTabs.FUNCTIONAL_BLOCKS) {
-            event.accept(AllBlocks.DEFAULT_DUCK.get());
             event.accept(AllBlocks.RUBBER_DUCK.get());
-            event.accept(AllBlocks.GOLDEN_DUCK.get());
         }
     }
 } 

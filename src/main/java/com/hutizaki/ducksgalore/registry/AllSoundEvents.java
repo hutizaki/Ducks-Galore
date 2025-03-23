@@ -15,17 +15,16 @@ public class AllSoundEvents {
         DeferredRegister.create(ForgeRegistries.SOUND_EVENTS, DucksGalore.MOD_ID);
 
     // Register sound events
-    public static final RegistryObject<SoundEvent> DUCK_USE = registerSoundEvent("duck_use");
-    public static final RegistryObject<SoundEvent> DUCK_PLACE = registerSoundEvent("duck_place");
     public static final RegistryObject<SoundEvent> RUBBER_DUCK_QUACK = registerSoundEvent("rubber_duck_quack");
-    public static final RegistryObject<SoundEvent> GOLDEN_DUCK_QUACK = registerSoundEvent("golden_duck_quack");
+    public static final RegistryObject<SoundEvent> RUBBER_DUCK_PLACE = registerSoundEvent("rubber_duck_place");
+    public static final RegistryObject<SoundEvent> RUBBER_DUCK_BREAK = registerSoundEvent("rubber_duck_break");
 
     /**
      * Helper method to register a sound event
      */
-    public static RegistryObject<SoundEvent> registerSoundEvent(String name) {
-        return SOUND_EVENTS.register(name, () -> 
-            SoundEvent.createVariableRangeEvent(new ResourceLocation(DucksGalore.MOD_ID, name)));
+    private static RegistryObject<SoundEvent> registerSoundEvent(String name) {
+        ResourceLocation location = new ResourceLocation(DucksGalore.MOD_ID, name);
+        return SOUND_EVENTS.register(name, () -> SoundEvent.createVariableRangeEvent(location));
     }
 
     /**

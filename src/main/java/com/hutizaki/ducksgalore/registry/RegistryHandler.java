@@ -2,7 +2,6 @@ package com.hutizaki.ducksgalore.registry;
 
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
 /**
  * Central registry handler for all registries
@@ -22,12 +21,6 @@ public class RegistryHandler {
         
         // Register sound events
         AllSoundEvents.register(modEventBus);
-        
-        // Register block entities
-        AllBlockEntityTypes.register(modEventBus);
-        
-        // Register entities
-        AllEntityTypes.register(modEventBus);
         
         // Register creative tabs
         AllCreativeModeTabs.register(modEventBus);

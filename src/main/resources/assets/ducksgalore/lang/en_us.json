@@ -1,27 +1,7 @@
 {  
-"block.ducksgalore.default_duck": "Duck Block",
 "block.ducksgalore.rubber_duck": "Rubber Duck Block",
-"block.ducksgalore.golden_duck": "Golden Duck Block",
-    
-"item.ducksgalore.default_duck": "Duck",
 "item.ducksgalore.rubber_duck": "Rubber Duck",
-"item.ducksgalore.golden_duck": "Golden Duck",
-    
-"entity.ducksgalore.duck": "Duck",
-    
 "itemGroup.ducksgalore.ducks_tab": "Ducks Galore",
-
-"duck_use": "Duck Quacks",
-"duck_use.sub": "Duck Quacking",
-"duck_place": "Duck Placed",
-"duck_place.sub": "Duck Placement",
 "rubber_duck_quack": "Rubber Duck Quacks",
-"rubber_duck_quack.sub": "Rubber Duck Quacking",
-"golden_duck_quack": "Golden Duck Quacks",
-"golden_duck_quack.sub": "Golden Duck Quacking",
-    
-"buff.ducksgalore.speed": "Speed",
-"buff.ducksgalore.strength": "Strength",
-    
-"tooltip.ducksgalore.golden_duck": "Grants Absorption when used"
+"rubber_duck_quack.sub": "Rubber Duck Quacking"
 }
