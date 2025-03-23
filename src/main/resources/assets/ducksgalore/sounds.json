@@ -1,0 +1,21 @@
+{
+    "duck_place": {
+        "category":"block",
+        "subtitle":"duck_place.sub",
+        "sounds": [
+            {
+                "name": "ducksgalore:duck_place"
+            }
+        ]
+    },
+    "duck_use": {
+        "category":"block",
+        "subtitle":"duck_use.sub",
+        "sounds":[
+            {
+                "name":"ducksgalore:duck_use"
+            }
+        ]
+    }
+
+}

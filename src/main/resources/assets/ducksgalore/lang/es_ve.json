@@ -1,0 +1,8 @@
+{  
+"block.ducksgalore.default_duck": "Duck Block",  
+"item.ducksgalore.default_duck": "Duck",  
+
+	"rubber_duck_use": "Sonido de pato de goma",
+    "rubber_duck_use.sub": "Sonido de pato de goma",
+    "rubber_duck_place": "Sonido de pato de goma",
+    "rubber_duck_place.sub": "Sonido de pato de goma"

@@ -1,0 +1,25 @@
+modLoader="javafml"
+loaderVersion="${loader_version_range}"
+license="All Rights Reserved"
+issueTrackerURL="https://github.com/hutizaki/Ducks_Galore/issues"
+
+[[mods]]
+    modId="ducksgalore"
+    version="${mod_version}"
+    displayName="Ducks Galore"
+    logoFile="ducksgalore.png"
+    authors="Hutizaki"
+    description='''A fully rebranded, quack-powered duck-themed mod for Minecraft 1.20.1'''
+
+[[dependencies.ducksgalore]]
+    modId="forge"
+    mandatory=true
+    versionRange="${forge_version_range}"
+    ordering="NONE"
+    side="BOTH"
+[[dependencies.ducksgalore]]
+    modId="minecraft"
+    mandatory=true
+    versionRange="${minecraft_version_range}"
+    ordering="NONE"
+    side="BOTH"
