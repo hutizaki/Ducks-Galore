@@ -828,5 +828,3 @@ To add a new buff type (e.g., "JumpBoost"):
        );
    }
    ```
-
-By following these guidelines, AI systems can more effectively generate coherent changes to the Duck's Galore mod while maintaining the established structure and conventions.
