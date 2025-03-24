@@ -1,0 +1,358 @@
+# Minecraft 1.20.1 Modding Guide with Forge and IntelliJ
+
+Welcome to the comprehensive Minecraft Forge modding guide for version **1.20.1**. This guide is modeled after Java documentation and provides in-depth, structured tutorials based on real transcripts from a proven YouTube tutorial series. This guide assumes you are using **Forge**, **IntelliJ IDEA Community Edition**, and the **Temurin JDK 17**.
+
+---
+
+## Table of Contents
+
+1. [Registering Custom Items](#registering-custom-items)
+   - Deferred Registers for Items
+   - Creative Mode Tab Integration
+   - Creating Language and Model JSON Files
+   - Adding Item Textures
+2. [Adding Custom Blocks](#adding-custom-blocks)
+   - Deferred Registers for Blocks
+   - Registering Block Items
+   - Creating JSON Models, Blockstates, and Textures
+3. [Crafting Recipes](#crafting-recipes)
+   - Shaped and Shapeless Recipes
+   - Smelting, Blasting, and Advanced Recipes
+   - Reverse Crafting Recipes
+   - Using Vanilla Recipes as Templates
+4. [Using Git and GitHub](#using-git-and-github)
+   - Connecting Your Mod to GitHub
+   - Version Control and Commits
+5. [Custom Loot Tables and Ores](#custom-loot-tables-and-ores)
+   - Creating Loot Tables for Blocks
+   - Tagging Blocks with Mining Tools and Tiers
+   - Adding Experience-Dropping Ore Blocks
+   - Testing Loot Behavior In-Game
+
+---
+
+## Registering Custom Items
+
+### Create `ModItems` Class
+- Location: `net.yourname.tutorialmod.item.ModItems`
+
+```java
+public class ModItems {
+    public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, TutorialMod.MOD_ID);
+
+    public static final RegistryObject<Item> SAPPHIRE = ITEMS.register("sapphire",
+        () -> new Item(new Item.Properties()));
+
+    public static void register(IEventBus eventBus) {
+        ITEMS.register(eventBus);
+    }
+}
+```
+
+### Register Items in Main Class
+```java
+ModItems.register(modEventBus);
+```
+
+### Add Items to Creative Tab
+```java
+private void addCreative(BuildCreativeModeTabContentsEvent event) {
+    if (event.getTabKey() == CreativeModeTabs.INGREDIENTS) {
+        event.accept(ModItems.SAPPHIRE);
+    }
+}
+```
+
+### Language and Model Files
+#### Path:
+```
+src/main/resources/assets/tutorialmod/lang/en_us.json
+```
+```json
+{
+  "item.tutorialmod.sapphire": "Sapphire"
+}
+```
+#### Path:
+```
+src/main/resources/assets/tutorialmod/models/item/sapphire.json
+```
+```json
+{
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "tutorialmod:item/sapphire"
+  }
+}
+```
+
+---
+
+## Adding Custom Blocks
+
+### Create `ModBlocks` Class
+```java
+public class ModBlocks {
+    public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, TutorialMod.MOD_ID);
+
+    public static final RegistryObject<Block> SAPPHIRE_BLOCK = registerBlock("sapphire_block",
+        () -> new Block(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).sound(SoundType.AMETHYST)));
+
+    private static <T extends Block> RegistryObject<T> registerBlock(String name, Supplier<T> block) {
+        RegistryObject<T> toReturn = BLOCKS.register(name, block);
+        registerBlockItem(name, toReturn);
+        return toReturn;
+    }
+
+    private static <T extends Block> void registerBlockItem(String name, RegistryObject<T> block) {
+        ModItems.ITEMS.register(name, () -> new BlockItem(block.get(), new Item.Properties()));
+    }
+
+    public static void register(IEventBus eventBus) {
+        BLOCKS.register(eventBus);
+    }
+}
+```
+
+### JSON Files for Blocks
+- `blockstates/sapphire_block.json`
+```json
+{
+  "variants": {
+    "": { "model": "tutorialmod:block/sapphire_block" }
+  }
+}
+```
+- `models/block/sapphire_block.json`
+```json
+{
+  "parent": "block/cube_all",
+  "textures": {
+    "all": "tutorialmod:block/sapphire_block"
+  }
+}
+```
+- `models/item/sapphire_block.json`
+```json
+{
+  "parent": "tutorialmod:block/sapphire_block"
+}
+```
+- `lang/en_us.json`
+```json
+{
+  "block.tutorialmod.sapphire_block": "Block of Sapphire"
+}
+```
+
+---
+
+## Crafting Recipes
+
+### Folder Structure
+```
+src/main/resources/data/tutorialmod/recipes/
+```
+
+### Shapeless Recipe
+- `sapphire_from_sapphire_block.json`
+```json
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    { "item": "tutorialmod:sapphire_block" }
+  ],
+  "result": {
+    "item": "tutorialmod:sapphire",
+    "count": 9
+  }
+}
+```
+
+### Shaped Recipe
+- `sapphire_block_from_sapphire.json`
+```json
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "###",
+    "###",
+    "###"
+  ],
+  "key": {
+    "#": { "item": "tutorialmod:sapphire" }
+  },
+  "result": {
+    "item": "tutorialmod:sapphire_block"
+  }
+}
+```
+
+### Furnace and Blast Furnace Recipes
+- `sapphire_from_smelting_raw_sapphire.json`
+```json
+{
+  "type": "minecraft:smelting",
+  "ingredient": { "item": "tutorialmod:raw_sapphire" },
+  "result": "tutorialmod:sapphire",
+  "experience": 0.7,
+  "cookingtime": 200
+}
+```
+- `sapphire_from_blasting_raw_sapphire.json`
+```json
+{
+  "type": "minecraft:blasting",
+  "ingredient": { "item": "tutorialmod:raw_sapphire" },
+  "result": "tutorialmod:sapphire",
+  "experience": 0.7,
+  "cookingtime": 100
+}
+```
+
+---
+
+## Using Git and GitHub
+
+### Initialize Repository
+1. **VCS > Share Project on GitHub**
+2. Set to **public** (if you plan to share it with others)
+3. Add a commit message: `Initial commit`
+4. Push changes using bottom-right green arrow
+
+### Version Control Basics
+- Modified files show in blue
+- Use `Ctrl + K` (or Commit button) to commit changes
+- Push to GitHub using bottom-right arrow
+
+---
+
+## Custom Loot Tables and Ores
+
+### Creating Loot Tables
+Create loot table JSON files inside:
+```
+src/main/resources/data/tutorialmod/loot_tables/blocks/
+```
+Example: `sapphire_block.json`
+```json
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "rolls": 1.0,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "tutorialmod:sapphire_block"
+        }
+      ],
+      "conditions": [
+        {
+          "condition": "minecraft:survives_explosion"
+        }
+      ]
+    }
+  ]
+}
+```
+
+### Tagging Blocks for Tool Requirements
+Add your blocks to mining tags under:
+```
+src/main/resources/data/minecraft/tags/blocks/minable/
+```
+- `pickaxe.json`
+```json
+{
+  "replace": false,
+  "values": [
+    "tutorialmod:sapphire_block",
+    "tutorialmod:raw_sapphire_block"
+  ]
+}
+```
+- `needs_iron_tool.json`
+```json
+{
+  "replace": false,
+  "values": [
+    "tutorialmod:sapphire_block"
+  ]
+}
+```
+- `needs_diamond_tool.json`
+```json
+{
+  "replace": false,
+  "values": [
+    "tutorialmod:raw_sapphire_block"
+  ]
+}
+```
+
+### Registering Ore Blocks with Experience
+In `ModBlocks.java`:
+```java
+public static final RegistryObject<Block> SAPPHIRE_ORE = registerBlock("sapphire_ore",
+    () -> new DropExperienceBlock(BlockBehaviour.Properties.copy(Blocks.STONE)
+        .strength(2f).requiresCorrectToolForDrops(),
+        UniformInt.of(3, 6)));
+```
+
+### Loot Table for Ores
+Example: `sapphire_ore.json`
+```json
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "rolls": 1.0,
+      "entries": [
+        {
+          "type": "minecraft:alternatives",
+          "children": [
+            {
+              "type": "minecraft:item",
+              "conditions": [
+                {
+                  "condition": "minecraft:match_tool",
+                  "predicate": { "enchantments": [{"enchantment": "minecraft:silk_touch", "levels": {"min": 1} }] }
+                }
+              ],
+              "name": "tutorialmod:sapphire_ore"
+            },
+            {
+              "type": "minecraft:item",
+              "name": "tutorialmod:raw_sapphire",
+              "functions": [
+                {
+                  "function": "minecraft:set_count",
+                  "count": { "type": "minecraft:uniform", "min": 2.0, "max": 5.0 }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+```
+
+---
+
+## Coming Up Next
+- Implementing **tile entities / block entities**
+- Creating **custom GUIs and containers**
+- Generating content via **DataGen**
+- Animating models with **Geckolib** or **Blockbench**
+
+Stay tuned for the next volume in this extensive Minecraft Modding Guide!
+
+---
+
+_This markdown documentation is built from detailed transcripts and will continue to grow to match the extensiveness of Minecraft's internal systems and Java's formal documentation._
+
