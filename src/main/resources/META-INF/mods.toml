@@ -23,3 +23,9 @@ issueTrackerURL="https://github.com/hutizaki/Ducks_Galore/issues"
     versionRange="${minecraft_version_range}"
     ordering="NONE"
     side="BOTH"
+[[dependencies.ducksgalore]]
+    modId="create"
+    mandatory=false
+    versionRange="[0.5.1.e,)"
+    ordering="AFTER"
+    side="BOTH"

@@ -3,6 +3,7 @@ package com.hutizaki.ducksgalore.registry;
 import com.hutizaki.ducksgalore.DucksGalore;
 import com.hutizaki.ducksgalore.content.ducks.items.GoldenRubberDuckItem;
 import com.hutizaki.ducksgalore.content.ducks.items.RubberDuckItem;
+import com.hutizaki.ducksgalore.content.ducks.items.GoldOreRubberDuckItem;
 
 import net.minecraft.world.item.Item;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -23,6 +24,9 @@ public class AllItems {
     
     public static final RegistryObject<Item> GOLDEN_RUBBER_DUCK = registerItem("golden_rubber_duck",
         () -> new GoldenRubberDuckItem(AllBlocks.GOLDEN_RUBBER_DUCK.get(), new Item.Properties()));
+        
+    public static final RegistryObject<Item> GOLD_ORE_RUBBER_DUCK = registerItem("gold_ore_rubber_duck",
+        () -> new GoldOreRubberDuckItem(AllBlocks.GOLD_ORE_RUBBER_DUCK.get(), new Item.Properties()));
 
     /**
      * Helper method to register an item

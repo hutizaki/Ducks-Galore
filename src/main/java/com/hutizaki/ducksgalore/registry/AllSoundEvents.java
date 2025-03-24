@@ -14,13 +14,18 @@ public class AllSoundEvents {
     public static final DeferredRegister<SoundEvent> SOUND_EVENTS = 
         DeferredRegister.create(ForgeRegistries.SOUND_EVENTS, DucksGalore.MOD_ID);
 
-    // Register sound events
+    // Register sound events - consolidated to reduce redundancy
+    // Regular rubber duck sounds
     public static final RegistryObject<SoundEvent> RUBBER_DUCK_QUACK = registerSoundEvent("rubber_duck_quack");
-    public static final RegistryObject<SoundEvent> RUBBER_DUCK_PLACE = registerSoundEvent("rubber_duck_place");
-    public static final RegistryObject<SoundEvent> RUBBER_DUCK_BREAK = registerSoundEvent("rubber_duck_break");
-    public static final RegistryObject<SoundEvent> GOLDEN_DUCK_QUACK = registerSoundEvent("golden_duck_quack");
-    public static final RegistryObject<SoundEvent> GOLDEN_RUBBER_DUCK_PLACE = registerSoundEvent("golden_rubber_duck_place");
-    public static final RegistryObject<SoundEvent> GOLDEN_RUBBER_DUCK_BREAK = registerSoundEvent("golden_rubber_duck_break");
+    public static final RegistryObject<SoundEvent> RUBBER_DUCK_BLOCK_EVENT = registerSoundEvent("rubber_duck_block_event");
+    
+    // Golden rubber duck sounds
+    public static final RegistryObject<SoundEvent> GOLDEN_RUBBER_DUCK_QUACK = registerSoundEvent("golden_duck_quack");
+    public static final RegistryObject<SoundEvent> GOLDEN_RUBBER_DUCK_BLOCK_EVENT = registerSoundEvent("golden_rubber_duck_block_event");
+    
+    // Gold ore rubber duck sounds
+    public static final RegistryObject<SoundEvent> GOLD_ORE_RUBBER_DUCK_QUACK = registerSoundEvent("gold_ore_rubber_duck_quack");
+    public static final RegistryObject<SoundEvent> GOLD_ORE_RUBBER_DUCK_BLOCK_EVENT = registerSoundEvent("gold_ore_rubber_duck_block_event");
 
     /**
      * Helper method to register a sound event

@@ -13,13 +13,18 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.HorizontalDirectionalBlock;
+import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.level.material.MapColor;
+import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -68,8 +73,18 @@ public class RubberDuckBlock extends HorizontalDirectionalBlock {
     );
     
     public RubberDuckBlock(Properties properties) {
-        super(properties.noOcclusion());
+        super(properties);
         this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH));
+    }
+    
+    /**
+     * Static creator method with default Minecraft properties
+     */
+    public static Properties createRubberDuckProperties() {
+        return Properties.of()
+            .strength(0.05F)  // Easily breakable by hand
+            .noOcclusion()
+            .pushReaction(PushReaction.BLOCK);
     }
 
     @Override
@@ -101,10 +116,16 @@ public class RubberDuckBlock extends HorizontalDirectionalBlock {
     @Override
     public InteractionResult use(@Nonnull BlockState state, @Nonnull Level level, @Nonnull BlockPos pos, 
                               @Nonnull Player player, @Nonnull InteractionHand hand, @Nonnull BlockHitResult hit) {
-        // Play rubber duck sound when right-clicked
+        // Play rubber duck sound when right-clicked and give player absorption
         if (hand == InteractionHand.MAIN_HAND) {  // Only trigger for main hand
-            level.playSound(null, pos, AllSoundEvents.RUBBER_DUCK_QUACK.get(), SoundSource.BLOCKS, 1.0F, 
-                          level.random.nextFloat() * 0.2F + 0.9F);
+            if (!level.isClientSide) {
+                // Give player absorption for 30 seconds (600 ticks)
+                player.addEffect(new MobEffectInstance(MobEffects.ABSORPTION, 600, 0));
+                
+                // Play rubber duck quack sound
+                level.playSound(null, pos, AllSoundEvents.RUBBER_DUCK_QUACK.get(), SoundSource.BLOCKS, 1.5F, 
+                               1.0F + (level.random.nextFloat() * 0.1F));
+            }
             return InteractionResult.sidedSuccess(level.isClientSide);
         }
         return InteractionResult.PASS;
@@ -114,8 +135,9 @@ public class RubberDuckBlock extends HorizontalDirectionalBlock {
     public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean isMoving) {
         if (!state.is(newState.getBlock())) {
             if (!level.isClientSide) {
-                level.playSound(null, pos, AllSoundEvents.RUBBER_DUCK_BREAK.get(), SoundSource.BLOCKS, 1.0F, 
-                              level.random.nextFloat() * 0.2F + 0.9F);
+                // Play block event sound
+                level.playSound(null, pos, AllSoundEvents.RUBBER_DUCK_BLOCK_EVENT.get(), SoundSource.BLOCKS, 1.5F, 
+                              1.0F + (level.random.nextFloat() * 0.1F));
             }
         }
         super.onRemove(state, level, pos, newState, isMoving);
@@ -123,10 +145,11 @@ public class RubberDuckBlock extends HorizontalDirectionalBlock {
 
     @Override
     public void onPlace(BlockState state, Level level, BlockPos pos, BlockState oldState, boolean isMoving) {
-        super.onPlace(state, level, pos, oldState, isMoving);
         if (!level.isClientSide) {
-            level.playSound(null, pos, AllSoundEvents.RUBBER_DUCK_PLACE.get(), SoundSource.BLOCKS, 1.0F, 
-                           level.random.nextFloat() * 0.2F + 0.9F);
+            // Play block event sound
+            level.playSound(null, pos, AllSoundEvents.RUBBER_DUCK_BLOCK_EVENT.get(), SoundSource.BLOCKS, 1.5F, 
+                           1.0F + (level.random.nextFloat() * 0.1F));
         }
+        super.onPlace(state, level, pos, oldState, isMoving);
     }
 } 

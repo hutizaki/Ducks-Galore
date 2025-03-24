@@ -278,6 +278,334 @@ src/main/resources/
    }
    ```
 
+## Adding New Rubber Duck Types
+
+The Ducks Galore mod follows a consistent pattern for adding new rubber duck types. This guide provides a step-by-step approach that both human developers and AI assistants can follow.
+
+### Core Components for a New Rubber Duck
+
+Each rubber duck type in the mod consists of the following components:
+
+#### 1. Java Classes (Source Code)
+
+1. **Block Class**: Defines the duck block's behavior
+2. **Item Class**: Defines the duck item's behavior (optional if no special functionality needed)
+
+#### 2. Registration
+
+1. **Block Registration**: In `AllBlocks.java`
+2. **Item Registration**: In `AllItems.java`
+3. **Sound Registration**: In `AllSoundEvents.java`
+
+#### 3. Resource Files
+
+1. **Models**: Block and item model files
+2. **Blockstate**: JSON file defining the block's states
+3. **Textures**: PNG texture files
+4. **Sounds**: OGG sound files
+5. **Language**: Translation entries
+6. **Loot Tables**: Defining what drops when the block is broken
+
+### Step-by-Step Guide
+
+Below is a comprehensive guide to adding a new rubber duck type, using example code for a "Copper Rubber Duck".
+
+#### Step 1: Create the Block Class
+
+Create a new Java class extending `RubberDuckBlock` in `content/ducks/blocks/`:
+
+```java
+package com.hutizaki.ducksgalore.content.ducks.blocks;
+
+import com.hutizaki.ducksgalore.registry.AllSoundEvents;
+
+import net.minecraft.core.BlockPos;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.BlockHitResult;
+
+import javax.annotation.Nonnull;
+
+/**
+ * Copper Rubber Duck block implementation - a special variant with unique properties
+ */
+public class CopperRubberDuckBlock extends RubberDuckBlock {
+    
+    public CopperRubberDuckBlock(Properties properties) {
+        super(properties);
+    }
+    
+    @Override
+    public InteractionResult use(@Nonnull BlockState state, @Nonnull Level level, @Nonnull BlockPos pos, 
+                              @Nonnull Player player, @Nonnull InteractionHand hand, @Nonnull BlockHitResult hit) {
+        // Play copper rubber duck sound when right-clicked and give player effect
+        if (hand == InteractionHand.MAIN_HAND) {  // Only trigger for main hand
+            // Apply special effect
+            if (!level.isClientSide) {
+                // Give player Haste effect for 45 seconds (900 ticks)
+                player.addEffect(new MobEffectInstance(MobEffects.DIG_SPEED, 900, 1));
+                
+                // Play copper duck quack sound
+                level.playSound(null, pos, AllSoundEvents.COPPER_RUBBER_DUCK_QUACK.get(), SoundSource.BLOCKS, 1.5F, 
+                               1.0F + (level.random.nextFloat() * 0.1F));
+            }
+            return InteractionResult.sidedSuccess(level.isClientSide);
+        }
+        return InteractionResult.PASS;
+    }
+
+    @Override
+    public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean isMoving) {
+        if (!state.is(newState.getBlock())) {
+            if (!level.isClientSide) {
+                // Play block event sound
+                level.playSound(null, pos, AllSoundEvents.COPPER_RUBBER_DUCK_BLOCK_EVENT.get(), SoundSource.BLOCKS, 1.5F, 
+                              1.0F + (level.random.nextFloat() * 0.1F));
+            }
+        }
+        // Do NOT call super.onRemove to prevent double sound
+    }
+
+    @Override
+    public void onPlace(BlockState state, Level level, BlockPos pos, BlockState oldState, boolean isMoving) {
+        // Do NOT call super.onPlace to prevent double sound
+        if (!level.isClientSide) {
+            // Play block event sound
+            level.playSound(null, pos, AllSoundEvents.COPPER_RUBBER_DUCK_BLOCK_EVENT.get(), SoundSource.BLOCKS, 1.5F, 
+                           1.0F + (level.random.nextFloat() * 0.1F));
+        }
+    }
+}
+```
+
+#### Step 2: Create the Item Class (if needed)
+
+Create a new Java class extending `BlockItem` in `content/ducks/items/`:
+
+```java
+package com.hutizaki.ducksgalore.content.ducks.items;
+
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+
+import javax.annotation.Nullable;
+import java.util.List;
+
+/**
+ * Copper Rubber Duck item implementation
+ */
+public class CopperRubberDuckItem extends BlockItem {
+    public CopperRubberDuckItem(Block block, Properties properties) {
+        super(block, properties);
+    }
+
+    @Override
+    public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag flag) {
+        // Add tooltip text
+        tooltip.add(Component.translatable("tooltip.ducksgalore.copper_rubber_duck"));
+        super.appendHoverText(stack, level, tooltip, flag);
+    }
+}
+```
+
+#### Step 3: Register Sound Events
+
+Add new sound events in `registry/AllSoundEvents.java`:
+
+```java
+public static final RegistryObject<SoundEvent> COPPER_RUBBER_DUCK_QUACK = registerSoundEvent("copper_rubber_duck_quack");
+public static final RegistryObject<SoundEvent> COPPER_RUBBER_DUCK_BLOCK_EVENT = registerSoundEvent("copper_rubber_duck_block_event");
+```
+
+#### Step 4: Register Block and Item
+
+In `registry/AllBlocks.java`:
+
+```java
+// Register copper rubber duck block
+public static final RegistryObject<Block> COPPER_RUBBER_DUCK = registerBlock("copper_rubber_duck",
+    () -> new CopperRubberDuckBlock(BlockBehaviour.Properties.copy(Blocks.COPPER_BLOCK)));
+```
+
+In `registry/AllItems.java`:
+
+```java
+public static final RegistryObject<Item> COPPER_RUBBER_DUCK = registerItem("copper_rubber_duck",
+    () -> new CopperRubberDuckItem(AllBlocks.COPPER_RUBBER_DUCK.get(), new Item.Properties()));
+```
+
+#### Step 5: Create Resource Files
+
+1. **Create Blockstate File** (`assets/ducksgalore/blockstates/copper_rubber_duck.json`):
+
+```json
+{
+    "variants": {
+        "facing=north": { "model": "ducksgalore:block/copper_rubber_duck/block" },
+        "facing=east": { "model": "ducksgalore:block/copper_rubber_duck/block", "y": 90 },
+        "facing=south": { "model": "ducksgalore:block/copper_rubber_duck/block", "y": 180 },
+        "facing=west": { "model": "ducksgalore:block/copper_rubber_duck/block", "y": 270 }
+    }
+}
+```
+
+2. **Create Block Model** (`assets/ducksgalore/models/block/copper_rubber_duck/block.json`):
+
+Use the existing duck model structure with your custom texture:
+
+```json
+{
+    "credit": "Designed by Hutizaki",
+    "parent": "minecraft:block/block",
+    "ambientocclusion": false,
+    "texture_size": [8, 8],
+    "textures": {
+        "all": "ducksgalore:block/copper_rubber_duck",
+        "particle": "ducksgalore:block/copper_rubber_duck"
+    },
+    "elements": [
+        // Duck model elements (same as other duck models)
+    ]
+}
+```
+
+3. **Create Item Model** (`assets/ducksgalore/models/item/copper_rubber_duck.json`):
+
+```json
+{
+    "parent": "ducksgalore:block/copper_rubber_duck/block"
+}
+```
+
+4. **Create Loot Table** (`data/ducksgalore/loot_tables/blocks/copper_rubber_duck.json`):
+
+```json
+{
+    "type": "minecraft:block",
+    "pools": [
+      {
+        "rolls": 1,
+        "bonus_rolls": 0,
+        "entries": [
+          {
+            "type": "minecraft:item",
+            "name": "ducksgalore:copper_rubber_duck"
+          }
+        ],
+        "conditions": [
+          {
+            "condition": "minecraft:survives_explosion"
+          }
+        ]
+      }
+    ]
+}
+```
+
+5. **Add Sound Definitions** in `assets/ducksgalore/sounds.json`:
+
+```json
+"copper_rubber_duck_quack": {
+    "category": "blocks",
+    "subtitle": "copper_rubber_duck_quack.sub",
+    "sounds": [
+        "ducksgalore:copper_rubber_duck_quack"
+    ]
+},
+"copper_rubber_duck_block_event": {
+    "category": "blocks",
+    "subtitle": "copper_rubber_duck_block_event.sub",
+    "sounds": [
+        "ducksgalore:copper_rubber_duck_place"
+    ]
+}
+```
+
+6. **Add Language Entries** in `assets/ducksgalore/lang/en_us.json`:
+
+```json
+"block.ducksgalore.copper_rubber_duck": "Copper Rubber Duck Block",
+"item.ducksgalore.copper_rubber_duck": "Copper Rubber Duck",
+"tooltip.ducksgalore.copper_rubber_duck": "Grants Haste when used",
+"copper_rubber_duck_quack": "Copper Rubber Duck Quacks",
+"copper_rubber_duck_quack.sub": "Copper Rubber Duck Quacking",
+"copper_rubber_duck_block_event": "Copper Rubber Duck Block Interaction",
+"copper_rubber_duck_block_event.sub": "Copper Rubber Duck Block Interaction"
+```
+
+#### Step 6: Create Required Sound Files
+
+Add the following OGG files to `assets/ducksgalore/sounds/`:
+- `copper_rubber_duck_quack.ogg`
+- `copper_rubber_duck_place.ogg`
+
+### Adding Special Mechanics (Optional)
+
+For ducks with special mechanics (like the Gold Ore Rubber Duck), you may need to:
+
+1. Add event handlers in `events/ForgeEventHandlers.java` for special drop mechanics
+2. Create specialized effect components
+3. Add recipe definitions if the duck is craftable
+
+#### Example: Adding a Rare Duck that Drops from Blocks
+
+To add a duck that has a chance to drop when breaking specific blocks (like the Gold Ore Rubber Duck), add the following code to `events/ForgeEventHandlers.java`:
+
+```java
+@SubscribeEvent
+public static void onBlockBreak(BlockEvent.BreakEvent event) {
+    if (event.getLevel().isClientSide()) return;
+    
+    // Check if the broken block is copper ore
+    if (event.getState().getBlock() == Blocks.COPPER_ORE) {
+        // 1/1500 chance (0.067%) to drop a copper rubber duck
+        if (RANDOM.nextInt(1500) == 0) {
+            ItemStack duckStack = new ItemStack(AllItems.COPPER_RUBBER_DUCK.get());
+            ItemEntity itemEntity = new ItemEntity(
+                event.getLevel().getLevel(),
+                event.getPos().getX() + 0.5,
+                event.getPos().getY() + 0.5,
+                event.getPos().getZ() + 0.5,
+                duckStack
+            );
+            itemEntity.setDefaultPickUpDelay();
+            event.getLevel().getLevel().addFreshEntity(itemEntity);
+        }
+    }
+}
+```
+
+### Tips for Maintaining Consistency
+
+1. **Naming Conventions**:
+   - Always use the format `[MATERIAL]_rubber_duck` for resource names
+   - For blocks: `[Material]RubberDuckBlock.java`
+   - For items: `[Material]RubberDuckItem.java`
+
+2. **Sound Management**:
+   - Use separate `[MATERIAL]_rubber_duck_quack` for quacking sounds
+   - Use a unified `[MATERIAL]_rubber_duck_block_event` for both placement and breaking sounds
+
+3. **Effects**:
+   - Choose effects that thematically match the material of the duck
+   - Keep effect durations and amplifiers balanced
+
+4. **Documentation**:
+   - Comment your code to explain the duck's special behaviors
+   - Add tooltips to explain the duck's effects to players
+
+By following these guidelines, you can easily add new rubber duck types to the mod that maintain consistency with the existing system.
+
 ## Handling Forge Registries
 
 ### Registry Structure
@@ -669,403 +997,820 @@ PonderRegistry.addStoryBoard(DucksGalore.asResource("rubber_duck"), "rubber_duck
 );
 ```
 
-## AI Integration Guidelines
+### Working with CreateSceneBuilder
 
-When using AI tools to modify or expand this mod, the following structured approach is recommended:
+The `CreateSceneBuilder` class is a powerful tool that helps you build interactive ponder scenes. Here are some common techniques used in the Create mod's ponder scenes:
 
-### 1. Adding New Duck Variants
+#### Scene Setup and Timing
 
-To create a new duck variant (e.g., "Diamond Duck"):
+```java
+// Initialize the builder
+CreateSceneBuilder scene = new CreateSceneBuilder(builder);
 
-1. **Create these files:**
-   - `content/ducks/blocks/special/DiamondDuckBlock.java`
-   - `assets/ducksgalore/textures/block/diamond_duck.png`
-   - `assets/ducksgalore/models/block/diamond_duck.json`
-   - `assets/ducksgalore/blockstates/diamond_duck.json`
+// Set title and description
+scene.title("example_scene", "How to Use Example Block");
 
-2. **Register in these locations:**
-   - Add to `registry/AllBlocks.java`
-   - Add to `registry/AllItems.java`
-   - Add to `assets/ducksgalore/lang/en_us.json`
+// Configure the base plate size and position
+scene.configureBasePlate(0, 0, 5);  // Origin X, Z, and size
+scene.showBasePlate();
 
-3. **Example Code for AI Generation:**
+// Add pauses between actions
+scene.idle(20);  // Waits for 20 ticks (1 second)
+
+// Add keyframes to highlight important steps
+scene.addKeyframe();
+```
+
+#### Showing and Manipulating Blocks
+
    ```java
-   // DiamondDuckBlock.java
-   package com.hutizaki.ducksgalore.content.ducks.blocks.special;
-   
-   import com.hutizaki.ducksgalore.content.ducks.blocks.DuckBlock;
-   import net.minecraft.world.effect.MobEffectInstance;
-   import net.minecraft.world.effect.MobEffects;
-   import net.minecraft.world.entity.player.Player;
-   import net.minecraft.world.level.block.state.BlockState;
-   import net.minecraft.world.level.Level;
-   import net.minecraft.core.BlockPos;
-   import net.minecraft.world.InteractionHand;
-   import net.minecraft.world.InteractionResult;
-   import net.minecraft.world.phys.BlockHitResult;
-   
-   public class DiamondDuckBlock extends DuckBlock {
-       public DiamondDuckBlock(Properties properties) {
-           super(properties);
-       }
+// Show sections of the world
+scene.world().showSection(util.select().layer(0), Direction.UP);
+scene.world().showSection(util.select().position(blockPos), Direction.DOWN);
+
+// Show or hide sections independently
+ElementLink<WorldSectionElement> section = 
+    scene.world().showIndependentSection(util.select().position(blockPos), Direction.UP);
+scene.world().hideIndependentSection(section, Direction.DOWN);
+
+// Modify block states
+scene.world().setBlock(blockPos, newState, false);
+scene.world().modifyBlock(blockPos, state -> state.setValue(PROPERTY, value), false);
+
+// Work with redstone
+scene.world().toggleRedstonePower(util.select().position(leverPos));
+scene.effects().indicateRedstone(leverPos);
+```
+
+#### Working with Items and Entities
+
+```java
+// Create an item on a belt
+ElementLink<BeltItemElement> beltItem = 
+    scene.world().createItemOnBelt(beltPos, Direction.SOUTH, itemStack);
+
+// Create an entity
+ElementLink<EntityElement> entity = scene.world().createEntity(entitySupplier);
+
+// Add a parrot for demonstration
+ElementLink<ParrotElement> parrot = 
+    scene.special().createBirb(util.vector().topOf(blockPos), ParrotPose::new);
+scene.special().rotateParrot(parrot, 0, 180, 0, 20);
+```
+
+#### Visual Effects and Overlays
+
+```java
+// Show rotation direction and speed
+scene.effects().rotationDirectionIndicator(blockPos);
+scene.effects().rotationSpeedIndicator(blockPos);
+
+// Show particles
+scene.effects().emitParticles(position, emitter);
+
+// Highlight a specific area
+scene.overlay().showOutline(PonderPalette.GREEN, "highlight", 
+    util.select().position(blockPos), 80);
+
+// Show explanatory text
+scene.overlay().showText(60)
+    .text("This is how the block works")
+    .pointAt(util.vector().topOf(blockPos))
+    .placeNearTarget();
+
+// Show controls
+scene.overlay().showControls(
+    new InputWindowElement(util.vector().topOf(blockPos), Pointing.DOWN)
+        .withItem(itemStack), 40);
+```
+
+#### Working with Kinetics
+
+   ```java
+// Modify kinetic speed
+scene.world().setKineticSpeed(util.select().position(blockPos), 32f);
+scene.world().multiplyKineticSpeed(util.select().everywhere(), 2f);
+
+// Change rotation direction
+scene.world().modifyKineticSpeed(selection, f -> -f);
+```
+
+These examples showcase just a portion of what's possible with the CreateSceneBuilder. The class provides access to three main categories of instructions:
+
+1. `scene.world()` - Manipulate blocks, entities, and items in the ponder world
+2. `scene.effects()` - Add visual effects like particles, rotation indicators, etc.
+3. `scene.overlay()` - Show UI elements like text, outlines, or item selections
+
+For more advanced scenarios, look at the Create mod's existing ponder scenes as reference.
+
+### Creating NBT Files for Ponder Scenes
+
+The NBT files in the `ponder` directory are essential as they define the physical structure of your scenes. Here's how to create them:
+
+#### Method 1: Using Create's Schematic Tools
+
+1. **Setup a Creative World**: Create a new creative world or use an existing one.
+
+2. **Build Your Scene**: Construct the blocks, machines, or structures you want to showcase in your ponder scene.
+
+3. **Use Create's Schematic Tools**:
+   - Craft a Schematic and Quill item
+   - Right-click to select the first corner of your scene
+   - Right-click again to select the opposite corner
+   - Name your schematic and save it
+
+4. **Export the NBT File**:
+   - The schematic will be saved in your `.minecraft/schematics` folder
+   - Rename the file to match your scene ID (e.g., `example_scene.nbt`)
+   - Move the file to your mod's `src/main/resources/assets/yourmod/ponder/` directory
+
+#### Method 2: Using Debug Tools (For Development)
+
+If you're familiar with the Create development environment, you can use debug tools:
+
+1. Create a new class extending `PonderNBTBuilder` that sets up your scene programmatically
+
+2. Add a method like:
+   ```java
+   public static void generateExampleSceneNBT() {
+       PonderNBTBuilder builder = new PonderNBTBuilder();
+       builder.emptyBasePlate(7, 7); // Size of the base plate
        
-       @Override
-       public InteractionResult use(BlockState state, Level level, BlockPos pos, 
-                                  Player player, InteractionHand hand, BlockHitResult hit) {
-           // Special diamond duck effect
-           if (!level.isClientSide()) {
-               player.addEffect(new MobEffectInstance(MobEffects.NIGHT_VISION, 300, 0));
-           }
-           
-           // Play duck sound
-           level.playSound(player, pos, 
-               com.hutizaki.ducksgalore.registry.AllSoundEvents.DIAMOND_DUCK_QUACK.get(), 
-               net.minecraft.sounds.SoundSource.BLOCKS, 1.0F, 1.0F);
-               
-           return InteractionResult.sidedSuccess(level.isClientSide);
-       }
+       // Add blocks to the scene
+       builder.block(3, 1, 3, YourBlocks.EXAMPLE_BLOCK.getDefaultState());
+       builder.block(3, 1, 4, Blocks.LEVER.getDefaultState());
+       
+       // Add entities or other elements
+       
+       // Save the NBT file
+       builder.saveToNBT("example_scene");
    }
    ```
 
-### 2. Adding New Buff Types
+3. Call this method during development to generate your NBT files.
 
-To add a new buff type (e.g., "JumpBoost"):
+#### Testing Your NBT Files
 
-1. **Create:**
-   - `content/buffs/buffs/JumpBoostBuff.java`
+Once your NBT files are in place, you can verify they work correctly by:
 
-2. **Register in:**
-   - `content/buffs/BuffRegistry.java`
-   - Add translation in `assets/ducksgalore/lang/en_us.json`
+1. Loading your mod in a development environment
+2. Opening the Ponder index (Press 'w' while hovering over your block in the inventory)
+3. Finding your scene and making sure it loads correctly
 
-3. **Example Implementation:**
+Remember that any changes to the NBT files require the game to be restarted to see the updates.
+
+### Localizing Ponder Content
+
+To make your Ponder scenes accessible to players using different languages, you'll need to implement proper localization:
+
+#### 1. Scene Title and Description Localization
+
+Scene titles and descriptions are automatically pulled from language files when you use translation keys:
+
+```java
+// In your scene definition
+scene.title("example_block.basic", "Basic Example Block Usage");
+```
+
+Then in your language files:
+
+```json
+// assets/yourmod/lang/en_us.json
+{
+  "ponder.yourmod.example_block.basic": "Basic Example Block Usage",
+  "ponder.yourmod.example_block.basic.description": "Learn how to use the example block"
+}
+
+// assets/yourmod/lang/fr_fr.json
+{
+  "ponder.yourmod.example_block.basic": "Utilisation de base du bloc d'exemple",
+  "ponder.yourmod.example_block.basic.description": "Apprenez à utiliser le bloc d'exemple"
+}
+```
+
+#### 2. Text Overlay Localization
+
+For text shown within the scene:
+
+```java
+// In your scene
+scene.overlay().showText(60)
+    .text(Component.translatable("ponder.yourmod.example_block.step1"))
+    .pointAt(util.vector.topOf(blockPos))
+    .placeNearTarget();
+```
+
+Then in your language files:
+
+```json
+{
+  "ponder.yourmod.example_block.step1": "Place the block and right-click to activate"
+}
+```
+
+#### 3. Tag and Chapter Localization
+
+When registering tags:
+
    ```java
-   package com.hutizaki.ducksgalore.content.buffs.buffs;
+helper.registerTag(EXAMPLE_TAG)
+    .addToIndex()
+    .item(AllBlocks.EXAMPLE_BLOCK.get(), true, false)
+    .title("Example Tag")  // Default English version
+    .description("Blocks and items related to example functionality")
+    .register();
+```
+
+These titles and descriptions can be localized in language files:
+
+```json
+{
+  "ponder.tag.yourmod.example_tag": "Example Tag",
+  "ponder.tag.yourmod.example_tag.description": "Blocks and items related to example functionality"
+}
+```
+
+This approach ensures your Ponder scenes are accessible to a global audience and maintains consistency with Minecraft's localization system.
+
+### Customizing Ponder Visuals
+
+The Ponder system uses various textures for UI elements. Here's how to customize these for your mod:
+
+#### 1. Tag Icons
+
+Each Ponder tag needs a distinctive icon:
+
+```
+assets/yourmod/textures/ponder/tag/example_tag.png
+```
+
+Tag icons should be 16x16 pixels for best results. These icons appear in the Ponder index and when hovering over items with Ponder scenes.
+
+#### 2. Chapter Icons
+
+For mods with multiple chapters or categories:
+
+```
+assets/yourmod/textures/ponder/chapter/ducks.png
+```
+
+Chapter icons work best at 32x32 pixels and appear in the Ponder index navigation.
+
+#### 3. Custom Scene Textures
+
+For specialized overlays or custom illustrations within scenes:
+
+```
+assets/yourmod/textures/ponder/scenes/duck_diagram.png
+```
+
+You can show these using:
+
+```java
+scene.overlay().showImage(
+    new ResourceLocation("yourmod", "textures/ponder/scenes/duck_diagram.png"),
+    new Vec3(2, 1.5, 2), // position
+    new Vec2(3, 2),      // size
+    60                   // duration
+);
+```
+
+#### 4. Styling Guidelines
+
+For visual consistency:
+- Use a similar color palette across your Ponder visuals
+- Maintain a consistent style between your mod textures and Ponder icons
+- For a unified look with Create, use their signature brown/brass tones
+- Keep designs simple and recognizable at small sizes
+
+These custom textures help establish your mod's visual identity within the Ponder system while making navigation intuitive for users.
+
+### Troubleshooting Ponder Scenes
+
+When developing Ponder scenes, you might encounter various issues. Here are common problems and their solutions:
+
+#### 1. Scene Not Appearing
+
+If your scene doesn't appear when clicking on an item:
+
+- Verify that you've registered the scene correctly in your PonderPlugin
+- Check that your NBT file exists in the correct location and is named exactly as referenced
+- Ensure your mod ID is consistent in all registrations
+- Look for errors in the log related to missing textures or NBT files
+
+#### 2. Visual Glitches
+
+If your scene has visual issues:
+
+- Verify block positions in your scene code match those in your NBT file
+- Check if any animations overlap or conflict with each other
+- Ensure timing is properly sequenced (using `scene.idle()` appropriately)
+- Try clearing Minecraft's cache folder if textures aren't loading correctly
+
+#### 3. Performance Issues
+
+If your scene runs slowly:
+
+- Reduce the number of simultaneous animations
+- Simplify large or complex NBT structures
+- Space out animations with more idle time between them
+- Avoid creating too many particle effects at once
+
+#### 4. Development Iteration
+
+For faster development:
+
+```java
+// Add this to your mod's development environment
+@SubscribeEvent
+public static void onKeyInput(InputEvent.KeyInputEvent event) {
+    if (Minecraft.getInstance().level == null) return;
+    
+    // Add a hotkey (F8 in this example) to reload all ponder scenes
+    if (event.getKey() == GLFW.GLFW_KEY_F8 && event.getAction() == GLFW.GLFW_PRESS) {
+        PonderClient.runCleanup();  // Clear cached scenes
+        PonderClient.refreshIndex(); // Reload all scenes
+        
+        // Send notification to player
+        Minecraft.getInstance().player.displayClientMessage(
+            Component.literal("Ponder scenes reloaded"), false);
+    }
+}
+```
+
+This allows you to reload scenes without restarting the game.
+
+#### 5. Common Error Messages
+
+- `Missing Ponder scene: [scene_id]` - Check your scene registration and NBT file
+- `Failed to load NBT structure` - Verify your NBT file is correctly formatted and in the right location
+- `Rendering error in Ponder scene` - Usually indicates an issue with animations or entity rendering
+
+#### 6. Debugging Mode
+
+To add visual debugging to your scenes:
+
+```java
+// Show block positions and selection boxes
+scene.showDebugOutline(true);
+
+// Add debug text at a specific point in the scene
+scene.overlay().showText(40)
+    .text("DEBUG: Position=" + blockPos)
+    .colored(PonderPalette.RED)
+    .placeNearTarget();
+```
+
+These troubleshooting techniques should help you identify and fix issues with your Ponder scenes more efficiently.
+
+### Ponder Integration with Other Mods
+
+Ponder scenes can be extended to demonstrate compatibility with other mods, creating a more cohesive player experience.
+
+#### 1. Cross-Mod Ponder Scenes
+
+To create scenes that demonstrate how your mod interacts with other mods:
+
+```java
+public static void crossModInteraction(CreateSceneBuilder scene, SceneBuildingUtil util) {
+    // Only show the scene if the other mod is present
+    if (!ModList.get().isLoaded("othermodid")) {
+        scene.title("cross_mod_functionality", "Feature requires Other Mod");
+        scene.showBasePlate();
+        scene.idle(20);
+        scene.overlay().showText(80)
+            .text("This feature requires Other Mod to be installed")
+            .colored(PonderPalette.RED);
+        return;
+    }
+    
+    // Regular ponder scene with cross-mod interaction
+    scene.title("cross_mod_functionality", "Integration with Other Mod");
+    scene.configureBasePlate(0, 0, 5);
+    scene.showBasePlate();
+    
+    // Scene showing interaction between your blocks and the other mod's blocks
+    BlockPos yourBlockPos = new BlockPos(2, 1, 2);
+    BlockPos otherModBlockPos = new BlockPos(2, 1, 3);
+    
+    // Show your block
+    scene.world().setBlock(yourBlockPos, YourMod.EXAMPLE_BLOCK.defaultBlockState(), false);
+    scene.idle(20);
+    
+    // Show other mod's block (access via Registry if possible)
+    Block otherModBlock = ForgeRegistries.BLOCKS.getValue(
+        new ResourceLocation("othermodid", "example_block"));
+    if (otherModBlock != null) {
+        scene.world().setBlock(otherModBlockPos, otherModBlock.defaultBlockState(), false);
+    }
+    
+    // Show interaction between the blocks
+    scene.idle(20);
+    scene.overlay().showText(60)
+        .text("Your block works with Other Mod's blocks")
+        .pointAt(util.vector.blockSurface(otherModBlockPos, Direction.WEST));
+}
+```
+
+#### 2. Conditional Registration
+
+Register scenes that depend on other mods only when those mods are present:
+
+```java
+public static void registerPonderScenes() {
+    // Register standard scenes
+    PonderRegistry.addStoryBoard(
+        YourMod.asResource("example_scene"),
+        "example_scene", 
+        YourScenes::standardScene
+    );
+    
+    // Register integration scenes only when compatible mods are present
+    if (ModList.get().isLoaded("othermodid")) {
+        PonderRegistry.addStoryBoard(
+            YourMod.asResource("othermod_integration"),
+            "othermod_integration", 
+            YourScenes::otherModIntegration
+        );
+    }
+}
+```
+
+#### 3. Accessing Other Mods' Blocks Safely
+
+To safely reference blocks from other mods:
+
+```java
+// Safe way to get blocks from other mods
+public static Block getBlockFromMod(String modId, String blockId) {
+    if (!ModList.get().isLoaded(modId)) {
+        return Blocks.BARRIER; // Fallback
+    }
+    
+    Block block = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(modId, blockId));
+    return block != null ? block : Blocks.BARRIER;
+}
+
+// Usage in scene
+Block specialBlock = getBlockFromMod("othermod", "special_block");
+scene.world().setBlock(blockPos, specialBlock.defaultBlockState(), false);
+```
+
+#### 4. Create API Integration
+
+If extending Create's functionality, you can use CreateSceneBuilder directly:
+
+```java
+public static void registerWithCreate(PonderSceneRegistrationHelper<ResourceLocation> helper) {
+    // Use this format to register scenes that extend Create features
+    helper.forComponents(YourMod.YOUR_EXTENSION_OF_CREATE_BLOCK)
+        .addStoryBoard("your_mod/extension", YourScenes::createExtension, 
+            AllCreatePonderTags.KINETIC_APPLIANCES);
+}
+```
+
+This approach helps players understand how your mod integrates with the broader modding ecosystem.
+
+### Best Practices for Effective Ponder Scenes
+
+Creating good Ponder scenes is as much an art as it is a technical implementation. Here are best practices for designing effective in-game tutorials:
+
+#### 1. Progressive Complexity
+
+Structure your scenes to build knowledge progressively:
+
+- Start with the most basic functionality
+- Gradually introduce more complex features
+- Link related scenes together to create learning paths
+- Use keyframes to highlight major conceptual shifts
+
+```java
+// Example of progressive complexity
+public static void basicToAdvanced(CreateSceneBuilder scene, SceneBuildingUtil util) {
+    scene.title("example_block.progression", "From Basic to Advanced Usage");
+    
+    // Start with basic setup
+    BlockPos blockPos = new BlockPos(2, 1, 2);
+    scene.world().showSection(util.select().position(blockPos), Direction.DOWN);
+    scene.idle(20);
+    
+    // Basic usage
+    scene.overlay().showText(60)
+        .text("Start by placing the block")
+        .pointAt(util.vector.topOf(blockPos));
+    scene.idle(70);
+    
+    // Add keyframe to mark progression to next concept
+    scene.addKeyframe();
+    
+    // Intermediate usage
+    scene.world().showSection(util.select().position(blockPos.north()), Direction.SOUTH);
+    scene.idle(20);
+    scene.overlay().showText(60)
+        .text("Connect another block to enable advanced features")
+        .pointAt(util.vector.blockSurface(blockPos, Direction.NORTH));
+    scene.idle(70);
+    
+    // Add another keyframe for next level
+    scene.addKeyframe();
+    
+    // Advanced usage
+    // ...and so on
+}
+```
+
+#### 2. Readability Guidelines
+
+Make your scenes easy to understand:
+
+- Keep text concise (5-12 words per overlay when possible)
+- Allow 2-3 seconds of reading time per word
+- Use consistent terminology throughout all scenes
+- Position text near the relevant action but not obscuring it
+- Use color coding for different types of information
+
+#### 3. Visual Clarity
+
+Ensure players can easily follow what's happening:
+
+- Highlight important elements with outlines or particles
+- Use contrasting colors for key components
+- Animate one element at a time when possible
+- Provide sufficient idle time between actions (15-30 ticks minimum)
+- Use keyframes to pause at critical points
+
+#### 4. Teaching Patterns
+
+Effective educational patterns to follow:
+
+1. **Show, Then Explain**: Demonstrate first, then explain what happened
+   ```java
+   // Show the action
+   scene.world().setBlock(blockPos, newState, false);
+   scene.effects().indicateSuccess(blockPos);
+   scene.idle(20);
    
-   import com.hutizaki.ducksgalore.DucksGalore;
-   import com.hutizaki.ducksgalore.content.buffs.DuckBuff;
-   import net.minecraft.resources.ResourceLocation;
-   import net.minecraft.world.effect.MobEffectInstance;
-   import net.minecraft.world.effect.MobEffects;
-   import net.minecraft.world.entity.player.Player;
-   import net.minecraft.world.item.ItemStack;
-   import net.minecraft.world.item.Items;
-   import net.minecraft.world.level.Level;
-   import net.minecraft.core.BlockPos;
-   
-   public class JumpBoostBuff implements DuckBuff {
-       private static final ResourceLocation ID = 
-           new ResourceLocation(DucksGalore.MOD_ID, "jump_boost");
-       
-       @Override
-       public ResourceLocation getId() {
-           return ID;
-       }
-       
-       @Override
-       public String getTranslationKey() {
-           return "buff.ducksgalore.jump_boost";
-       }
-       
-       @Override
-       public ItemStack getDisplayIcon() {
-           return new ItemStack(Items.RABBIT_FOOT);
-       }
-       
-       @Override
-       public void applyEffect(Player player, Level level, BlockPos pos) {
-           player.addEffect(new MobEffectInstance(MobEffects.JUMP, 400, 1));
-       }
-   }
+   // Then explain it
+   scene.overlay().showText(60)
+       .text("The block transforms when activated")
+       .pointAt(util.vector.topOf(blockPos));
    ```
 
-### 3. Creating Ponder Scenes for New Content
-
-1. **Build the NBT structure in-game**
-2. **Save to `assets/ducksgalore/ponder/new_feature.nbt`**
-3. **Create implementation in `integration/ponder/scenes/NewFeatureScenes.java`**
-4. **Register in `DucksPonderRegistry`**
-
-5. **Example Scene Structure for AI Generation:**
+2. **Compare & Contrast**: Show different approaches side by side
    ```java
-   public static void diamondDuckScene(PonderStoryBoardEntry storyboard) {
-       storyboard.scene("diamond_duck", "Diamond Duck Features", 
-           (scene, util) -> {
-               // Set up the scene
-               scene.showBasePlate();
-               scene.idle(10);
-               
-               // Place the diamond duck
-               BlockPos duckPos = new BlockPos(2, 1, 2);
-               scene.world.setBlock(duckPos, AllBlocks.DIAMOND_DUCK.get().defaultBlockState(), 1);
-               scene.idle(20);
-               
-               // First instruction
-               scene.overlay.showText(60)
-                   .text("The Diamond Duck provides Night Vision when right-clicked")
-                   .pointAt(util.vector.blockSurface(duckPos, Direction.UP));
-               scene.idle(70);
-               
-               // Show effect
-               scene.effects.indicateSuccess(duckPos);
-               scene.overlay.showOutline(
-                   PonderPalette.BLUE, 
-                   "playerArea", 
-                   util.select.fromTo(duckPos.north(3), duckPos.south(3).east(3).above(3)), 
-                   100
-               );
-               scene.idle(120);
-               
-               // Show duck in action
-               scene.effects.emitParticles(
-                   util.vector.topOf(duckPos),
-                   ParticleTypes.END_ROD,
-                   new Vec3(0, 0.1, 0),
-                   20,
-                   2.0f
-               );
-               scene.idle(30);
-           }
-       );
-   }
+   // Show two different setups
+   ElementLink<WorldSectionElement> correctSetup = 
+       scene.world().showIndependentSection(util.select().fromTo(1, 1, 1, 3, 3, 3), Direction.UP);
+   scene.idle(20);
+   
+   ElementLink<WorldSectionElement> incorrectSetup = 
+       scene.world().showIndependentSection(util.select().fromTo(5, 1, 1, 7, 3, 3), Direction.UP);
+   scene.idle(20);
+   
+   // Compare them
+   scene.overlay().showOutline(PonderPalette.GREEN, "correct", util.select().fromTo(1, 1, 1, 3, 3, 3), 60);
+   scene.overlay().showOutline(PonderPalette.RED, "incorrect", util.select().fromTo(5, 1, 1, 7, 3, 3), 60);
    ```
 
-By following these guidelines, AI systems can more effectively generate coherent changes to the Duck's Galore mod while maintaining the established structure and conventions.
+3. **Cause & Effect**: Clearly connect actions with results
+   ```java
+   // Show the cause
+   scene.world().toggleRedstonePower(util.select().position(leverPos));
+   scene.effects().indicateRedstone(leverPos);
+   scene.idle(10);
+   
+   // Show the effect
+   scene.world().setBlock(blockPos, activeState, false);
+   scene.effects().indicateSuccess(blockPos);
+   ```
 
-## Expansive Duck's Galore Enhancement Ideas
+#### 5. Scene Pacing
 
-### Duck Companions & Pets System
+Control the rhythm of your tutorials:
 
-1. **Living Duck Entities**
-   - Implement wandering duck entities that can be tamed with seeds
-   - Ducks follow players who hold bread or seeds
-   - Different colored variants with unique personalities
-   - Ducks can swim, fly short distances, and help find water sources
+- Keep total scene length under 60-90 seconds
+- Break complex topics into multiple linked scenes
+- Include 10-20 tick pauses after each significant action
+- Use longer pauses (40-60 ticks) after introducing new concepts
+- Speed up repetitive actions to maintain engagement
 
-2. **Duck Companion Abilities**
-   - Tamed ducks provide passive buffs to the player
-   - Duck companions can be equipped with tiny hats and accessories
-   - Create a duck whistle item to call your companion ducks
-   - Allow ducks to pick up small items and return them to the player
+By following these best practices, you'll create Ponder scenes that effectively teach players about your mod's features while keeping them engaged and interested.
 
-3. **Duck Breeding & Evolution**
-   - Breed different duck variants to create rare hybrid ducks
-   - Ducks can evolve when exposed to certain elements/blocks
-   - Baby ducks that follow their parents and grow over time
-   - Special mutation chances when breeding near magical blocks
+### Conclusion
 
-### Advanced Duck Buff System
+The Ponder system provides an elegant way to teach players about your mod's mechanics directly in-game. By following this guide, you can create detailed, interactive tutorials for all your mod's features, giving players a smoother learning experience.
 
-1. **Duck Altars & Shrines**
-   - Build duck-shaped altars that amplify nearby duck block effects
-   - Create multi-block duck shrine structures that generate passive buffs
-   - Duck temples that spawn naturally with special guardian ducks
-   - Ritual systems using duck blocks in specific formations
+### Duck Material Types and Tool Requirements
 
-2. **Duck Energy Network**
-   - Duck blocks can connect via a "quack network" to share buffs
-   - Transmit duck energy between distant bases using special antennas
-   - Duck blocks accumulate power when exposed to water or rain
-   - Create duck energy batteries to store and amplify effects
+The mod implements different duck material types with unique properties:
 
-3. **Seasonal Duck Effects**
-   - Duck blocks change appearance and buffs based on game seasons
-   - Special holiday-themed ducks that appear during certain dates
-   - Migration events where special duck types appear temporarily
-   - Winter ducks that provide warming effects in cold biomes
+#### Material Types
 
-### Duck Combat & Adventure System
+1. **Rubber Ducks** (`DuckMaterial.RUBBER`)
+   - No tool required to harvest - breakable with any tool or hand
+   - Fast breaking speed (0.3F destroy time)
+   - Uses bass instrument sound
+   - Standard rubber duck texture
 
-1. **Boss Ducks**
-   - Epic-sized duck bosses that spawn in special duck temples
-   - The Quack King: A massive golden duck that summons duck minions
-   - Corrupted ducks that drop rare crafting materials
-   - Duck Elementals: Special ducks aligned with fire, water, earth, and air
+2. **Metal Ducks** (`DuckMaterial.METAL`)
+   - Requires a pickaxe to properly harvest (will drop nothing without the right tool)
+   - Higher strength (1.5F) and slower mining time
+   - Uses bell instrument sound
+   - Examples: Golden Rubber Duck
 
-2. **Duck Weapons & Armor**
-   - Craft duck-feather armor that grants jump boosts and fall damage protection
-   - Duck bill swords that have a chance to "quack" and stun enemies
-   - Duck shield that can create a protective bubble when charged
-   - Duck boots that allow walking on water or increased swimming speed
+3. **Stone Ducks** (`DuckMaterial.STONE`)
+   - Requires a pickaxe to properly harvest (will drop nothing without the right tool)
+   - Higher strength (1.5F) and slower mining time
+   - Uses basedrum (stone) instrument sound
+   - Examples: Gold Ore Rubber Duck
 
-3. **Duck Dungeons**
-   - Duck-themed dungeon structures that spawn in swamp and river biomes
-   - Duck maze puzzles requiring specific duck blocks to solve
-   - Duck statues that come to life when approached
-   - Special duck chests containing rare duck variants
+#### Special Effects
 
-### Duck Economy & Progression
+Some duck types have unique visual effects:
 
-1. **Duck Currencies & Trading**
-   - Duck feathers as a special currency for a new duck trader villager type
-   - Duck trading system with wandering duck merchants
-   - Duck collections that provide rewards when completed
-   - Duck banks where feathers can be stored and generate interest
+1. **Golden Rubber Duck**
+   - Has a continuous enchantment shimmer effect
+   - Creates gold particles when interacted with
+   - Sparkles when placed in the world
 
-2. **Duck Skill Tree**
-   - Player progression system focused on duck mastery
-   - Unlock special duck abilities as you interact with more duck types
-   - Duck specializations: Collector, Breeder, Hunter, or Guardian paths
-   - Duck journals that track discoveries and provide lore
+2. **Applying Effects to Custom Ducks**
+   - Use the `DuckEffects` utility class to add visual effects to custom duck types
+   - Available effects include enchantment particles, gold particles, and ambient effects
 
-3. **Duck Quests & Achievements**
-   - Daily duck quests provided by special quest-giver ducks
-   - Multi-part duck storylines with unique rewards
-   - Duck hunting achievements for discovering all variants
-   - Secret duck challenges hidden throughout the world
+#### Implementing a Custom Duck with Material Properties
 
-### Duck Tech & Redstone Integration
+When creating a new duck type, specify its material in the constructor:
 
-1. **Duck Automation**
-   - Duck-powered generators that convert "quack energy" to redstone power
-   - Automated duck feeding systems to produce resources
-   - Duck sorting systems that classify items based on duck preferences
-   - Duck timers that activate redstone signals at dawn/dusk (when ducks are active)
+```java
+public class DiamondRubberDuckBlock extends DuckBlock {
+    public DiamondRubberDuckBlock() {
+        // Create a metal duck that requires a pickaxe
+        super(createDuckProperties(DuckMaterial.METAL), DuckMaterial.METAL);
+    }
+    
+    // Override methods for custom behavior
+}
+```
 
-2. **Duck Redstone Components**
-   - Duck logic gates that function based on water/duck proximity
-   - Duck detector blocks that activate when specific duck types are nearby
-   - Duck counters that keep track of nearby ducks and output signal strength
-   - Duck music boxes that play custom duck songs
+Register the block with appropriate properties:
 
-3. **Duck Transportation**
-   - Duck-powered boats that move automatically along water
-   - Duck launch pads that propel players in the direction the duck faces
-   - Duck teleporters that connect two distant duck shrines
-   - Duck elevators that float upward when activated
+```java
+// Register diamond rubber duck block with METAL material properties (pickaxe needed)
+public static final RegistryObject<Block> DIAMOND_RUBBER_DUCK = registerBlock("diamond_rubber_duck",
+    () -> new DiamondRubberDuckBlock(DuckBlock.createDuckProperties(DuckBlock.DuckMaterial.METAL)));
+```
 
-### Duck Farming & Resources
+### Golden Rubber Duck Ritual
 
-1. **Duck Husbandry**
-   - Duck nests where ducks lay special eggs with unique properties
-   - Duck feed types that influence egg production and duck growth
-   - Duck ponds that attract wild ducks when properly constructed
-   - Duck resources: feathers, eggs, down (for soft cushions and beds)
+The Golden Rubber Duck is a special variant that cannot be crafted through normal means. It requires a mystical ritual to create:
 
-2. **Magical Duck Plants**
-   - Duck-shaped crops that grow from special duck seeds
-   - Plants that grow faster when near duck blocks
-   - Duck lilies that float on water and provide duck-related resources
-   - Duck trees with duck-shaped fruits containing miniature duck pets
+#### The Ritual Altar
 
-3. **Duck Cuisine**
-   - Duck-themed foods that provide unique status effects
-   - Duck cookbook with special recipes to discover
-   - Duck cooking station for preparing special duck meals
-   - Duck feast events that can be prepared to summon special ducks
+1. **Base Structure:**
+   - Create a circle of Gold Blocks
+   - Place a regular rubber duck in the center
 
-### Duck Magic & Enchantments
+2. **Duck Circle:**
+   - Place 8 Gold Ore Rubber Ducks on top of the gold circle arrangement
+   - The 8 ducks should be placed directly above the gold blocks
 
-1. **Duck Enchantments**
-   - New enchantment type "Quacksmith" for tools that increases luck
-   - "Feather Fall" enhancement for boots using duck feathers
-   - "Duck's Resilience" armor enchantment that provides water breathing
-   - "Quack Attack" weapon enchantment causing enemies to be temporarily stunned
+3. **Center Components:**
+   - Drop an Enchanted Golden Apple (Notch Apple) onto the center
 
-2. **Duck Spells & Abilities**
-   - Duck-themed magic wand that casts different spells based on duck type
-   - Duck transformation spell allowing players to temporarily become a duck
-   - Duck summoning rituals to call different types of helpful duck spirits
-   - Duck's Eye potion allowing you to see the world as ducks do
+4. **Performing the Ritual:**
+   - When all components are correctly positioned, the ritual will automatically begin
+   - The Gold Ore Rubber Ducks will emit yellow particle beams toward the center
+   - After 5 seconds, lightning will strike the center
+   - The regular Rubber Duck, 8 Gold Ore Rubber Ducks, and the Enchanted Golden Apple will be consumed
+   - A Golden Rubber Duck will appear in place of the Regular Rubber Duck
 
-3. **Duck Curses & Challenges**
-   - The "Anatidaephobia" curse - being constantly watched by a duck
-   - Duck weather spells to summon rain (ducks love water!)
-   - Challenge dungeons where you must navigate as a duck
-   - Duck puzzle rooms requiring thinking like a duck to solve
+#### Visual Guide
 
-### Aesthetic & Decorative Duck Content
+**Bottom Level (Gold Block Platform):**
+```
+X X X G X X X
+X G X X X G X
+X X X X X X X
+G X X R X X G
+X X X X X X X
+X G X X X G X
+X X X G X X X
+```
 
-1. **Duck Furniture & Décor**
-   - Duck-shaped chairs, tables, beds, and storage
-   - Duck lamps with different colored lighting
-   - Duck wallpaper and carpet patterns
-   - Duck garden decorations and fountains
+**Top Level (Duck Placements):**
+```
+X X X D X X X
+X D X X X D X
+X X X X X X X
+D X X X X X D
+X X X X X X X
+X D X X X D X
+X X X D X X X
+```
 
-2. **Duck Customization**
-   - Duck Block Designer allowing custom duck patterns and colors
-   - Duck size adjusters to create tiny or giant decorative ducks
-   - Duck display cases to show off rare duck collections
-   - Duck-themed building blocks in various colors and materials
+Where:
+- G = Gold Block (bottom level)
+- D = Gold Ore Rubber Duck (top level)
+- R = Regular Rubber Duck (top level, center) + Enchanted Golden Apple
+- X = Air or other blocks
 
-3. **Duck Fashion & Accessories**
-   - Duck-themed player cosmetics and outfits
-   - Duck masks with special vision effects
-   - Duck backpacks that make quack sounds when opening
-   - Duck gliders for elegant soaring from high places
+The ritual requires this exact placement pattern, with the Gold Blocks forming a 3×3 platform at the bottom level, and the Gold Ore Rubber Ducks forming a circle on the top level. The Regular Duck and Enchanted Golden Apple go at the center of the top level.
 
-### Integration with Other Mods
+#### Properties of the Golden Rubber Duck
 
-1. **Create Integration**
-   - Duck-powered contraptions using Create's rotation mechanics
-   - Duck assembly lines for mass-producing duck items
-   - Automated duck block production using Create's mechanics
-   - Duck-themed Create components with special behaviors
+- Grants Regeneration II effect for 20 seconds when right-clicked
+- Emits a subtle golden glow (light level 5)
+- Displays enchantment particles and golden sparkles
+- Requires a pickaxe to properly harvest
+- Can be placed for decoration or used for its effect
 
-2. **Curios Integration**
-   - Duck amulets providing passive effects when worn
-   - Duck rings that attract certain mob types
-   - Duck pocket watch that tells time using duck sounds
-   - Duck belt that increases inventory when near water
+You can view this ritual in-game using Create's Ponder system by holding W over the Golden Rubber Duck item in your inventory.
 
-3. **JEI/REI Integration**
-   - Special duck crafting category in JEI/REI
-   - Duck breeding combinations shown in JEI/REI
-   - Duck buff combination recipes
-   - Duck evolution paths displayed visually
+### Creating Duck Ponder Screens
 
-### Multiplayer & Social Features
+To create a ponder screen for your duck, follow these steps:
 
-1. **Duck Teams & Clans**
-   - Form duck-themed clans with special banner patterns
-   - Duck race competitions using duck mounts
-   - Duck gifting system for sharing rare ducks
-   - Duck territory control minigame using duck blocks
+1. Create a new class that extends `DuckPonderScreen` in the `com.hutizaki.ducksgalore.client.ponder` package:
 
-2. **Duck Communication**
-   - Duck mail system using messenger ducks
-   - Duck translators to understand duck speech
-   - Duck chat emotes and reactions
-   - Duck announcement system using duck calls
+```java
+public class MyNewDuckPonder extends DuckPonderScreen {
+    // Define resource locations for your ponder pages
+    private static final ResourceLocation[] PAGES = {
+        DucksGalore.asResource("textures/gui/ponder/my_duck_page1.png"),
+        DucksGalore.asResource("textures/gui/ponder/my_duck_page2.png"),
+        DucksGalore.asResource("textures/gui/ponder/my_duck_page3.png")
+    };
+    
+    public MyNewDuckPonder(ItemStack item) {
+        super(item);
+    }
 
-3. **Duck Events**
-   - Scheduled duck migration events
-   - Duck carnival with duck-themed minigames
-   - The Great Duck Hunt seasonal event
-   - Duck beauty pageant competitions
+    @Override
+    protected int getTotalPages() {
+        return 3; // Number of pages
+    }
 
-## Implementation Roadmap
+    @Override
+    protected Component getPageTitle(int page) {
+        return switch (page) {
+            case 0 -> Component.translatable("ponder.ducksgalore.my_duck.title");
+            case 1 -> Component.translatable("ponder.ducksgalore.my_duck.page2_title");
+            case 2 -> Component.translatable("ponder.ducksgalore.my_duck.page3_title");
+            default -> Component.empty();
+        };
+    }
 
-To implement these extensive features, consider the following development roadmap:
+    @Override
+    protected void renderPage(GuiGraphics graphics, int mouseX, int mouseY, float partialTick, int page) {
+        // Draw page content for each page
+        // See existing ponder screens for examples
+    }
+}
+```
 
-1. **Phase 1: Duck Foundations**
-   - Expand the basic duck block system
-   - Implement living duck entities
-   - Create the duck buff core framework
-   - Add basic duck resources and crafting
+2. Add your ponder screen to the `DuckPonderScreenFactory`:
 
-2. **Phase 2: Duck Adventures**
-   - Develop duck dungeons and structures
-   - Implement boss ducks
-   - Create the duck quest system
-   - Add duck weapons and armor
+```java
+public static DuckPonderScreen createPonderScreen(ItemStack itemStack) {
+    // ... existing code ...
+    
+    else if (item == AllItems.MY_NEW_DUCK.get()) {
+        return new MyNewDuckPonder(itemStack);
+    }
+    
+    // ... existing code ...
+}
+```
 
-3. **Phase 3: Duck Society**
-   - Build the duck economy system
-   - Implement duck companions
-   - Develop duck breeding mechanics
-   - Create the duck skill tree
+3. Register your duck item for pondering in `DucksGaloreClient`:
 
-4. **Phase 4: Advanced Duck Technology**
-   - Implement duck redstone components
-   - Create the duck energy network
-   - Develop duck automation
-   - Add duck transportation systems
+```java
+DuckPonderSystem.registerPonderItem(AllItems.MY_NEW_DUCK.get());
+```
 
-5. **Phase 5: Duck Mastery**
-   - Implement duck magic and enchantments
-   - Create the seasonal duck system
-   - Develop multiplayer duck features
-   - Polish and optimize all duck systems
+4. Create the necessary ponder page images (176x100 pixels) in `assets/ducksgalore/textures/gui/ponder/`
 
-By implementing these features progressively, the Duck's Galore mod can evolve into a comprehensive duck-themed gameplay expansion that provides unique and engaging content for players at all stages of the game.
+5. Add translations for your ponder in `en_us.json`:
+
+```json
+"ponder.ducksgalore.my_duck.title": "My Custom Duck",
+"ponder.ducksgalore.my_duck.page2_title": "Duck Features",
+"ponder.ducksgalore.my_duck.page3_title": "Duck Effects",
+"ponder.ducksgalore.my_duck.desc1": "Description of your duck on page 1",
+"ponder.ducksgalore.my_duck.desc2": "Description of your duck on page 2",
+"ponder.ducksgalore.my_duck.desc3": "Description of your duck on page 3"
+```
+
+### Using the Duck Ponder System
+
+The Duck Ponder System provides an in-game way to learn about duck mechanics:
+
+1. In a container/inventory screen, hover over a duck item
+2. Press and hold the 'W' key (default, configurable)
+3. Wait for the loading bar to fill
+4. The ponder screen will open with information about the duck
+
+Navigate through the ponder screens:
+- Left click or right arrow to advance pages
+- Right click or left arrow to go back
+- ESC to close
