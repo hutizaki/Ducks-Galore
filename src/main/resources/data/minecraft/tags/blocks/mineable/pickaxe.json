@@ -1,7 +1,6 @@
 {
-  "replace": false,
   "values": [
-    "ducksgalore:gold_ore_rubber_duck",
-    "ducksgalore:golden_rubber_duck"
+    "ducksgalore:golden_rubber_duck",
+    "ducksgalore:gold_ore_rubber_duck"
   ]
 } 
