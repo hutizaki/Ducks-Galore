@@ -4,7 +4,7 @@ import com.hutizaki.ducksgalore.DucksGalore;
 import com.hutizaki.ducksgalore.content.ducks.blocks.RubberDuckBlock;
 import com.hutizaki.ducksgalore.content.ducks.blocks.GoldenRubberDuckBlock;
 import com.hutizaki.ducksgalore.content.ducks.blocks.GoldOreRubberDuckBlock;
-
+import com.hutizaki.ducksgalore.content.ducks.blocks.EmeraldRubberDuckBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockBehaviour;
@@ -31,6 +31,10 @@ public class AllBlocks {
     // Register gold ore rubber duck block with STONE material properties (pickaxe needed)
     public static final RegistryObject<Block> GOLD_ORE_RUBBER_DUCK = registerBlock("gold_ore_rubber_duck",
         () -> new GoldOreRubberDuckBlock(GoldOreRubberDuckBlock.createGoldOreRubberDuckProperties()));
+
+    // Register emerald rubber duck block with STONE material properties (pickaxe needed)
+    public static final RegistryObject<Block> EMERALD_RUBBER_DUCK = registerBlock("emerald_rubber_duck",
+        () -> new EmeraldRubberDuckBlock(EmeraldRubberDuckBlock.createEmeraldRubberDuckProperties()));
     
     /**
      * Helper method to register a block without automatically registering an item

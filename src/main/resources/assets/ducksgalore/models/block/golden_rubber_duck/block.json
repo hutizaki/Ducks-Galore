@@ -3,8 +3,8 @@
 	"parent": "minecraft:block/block",
 	"ambientocclusion": false,
 	"textures": {
-		"all": "ducksgalore:block/golden_rubber_duck",
-		"particle": "ducksgalore:block/golden_rubber_duck"
+		"particle": "ducksgalore:block/golden_rubber_duck",
+		"all": "ducksgalore:block/golden_rubber_duck"
 	},
 	"elements": [
 		{

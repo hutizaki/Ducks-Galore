@@ -4,6 +4,7 @@ import com.hutizaki.ducksgalore.ponder.PonderIndex;
 import com.hutizaki.ducksgalore.registry.AllBlocks;
 import com.hutizaki.ducksgalore.registry.AllItems;
 import com.hutizaki.ducksgalore.registry.RegistryHandler;
+import com.hutizaki.ducksgalore.events.LootTableModifier;
 
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
@@ -34,6 +35,7 @@ public class DucksGalore {
         
         // Register server and client events
         MinecraftForge.EVENT_BUS.register(this);
+        MinecraftForge.EVENT_BUS.register(LootTableModifier.class);
         
         LOGGER.info("Ducks Galore initialized!");
         
@@ -54,15 +56,13 @@ public class DucksGalore {
         LOGGER.info("Rubber Duck block registered: " + AllBlocks.RUBBER_DUCK.getId());
         LOGGER.info("Golden Rubber Duck block registered: " + AllBlocks.GOLDEN_RUBBER_DUCK.getId());
         LOGGER.info("Gold Ore Rubber Duck block registered: " + AllBlocks.GOLD_ORE_RUBBER_DUCK.getId());
-        
-        LOGGER.info("Rubber Duck item registered: " + AllItems.RUBBER_DUCK.getId());
-        LOGGER.info("Golden Rubber Duck item registered: " + AllItems.GOLDEN_RUBBER_DUCK.getId());
-        LOGGER.info("Gold Ore Rubber Duck item registered: " + AllItems.GOLD_ORE_RUBBER_DUCK.getId());
+        LOGGER.info("Emerald Rubber Duck block registered: " + AllBlocks.EMERALD_RUBBER_DUCK.getId());
         
         LOGGER.info("Checking texture paths:");
         LOGGER.info("Rubber Duck texture path: ducksgalore:block/rubber_duck");
         LOGGER.info("Golden Rubber Duck texture path: ducksgalore:block/golden_rubber_duck");
         LOGGER.info("Gold Ore Rubber Duck texture path: ducksgalore:block/gold_ore_rubber_duck");
+        LOGGER.info("Emerald Rubber Duck texture path: ducksgalore:block/emerald_rubber_duck");
     }
     
     private void setup(final FMLCommonSetupEvent event) {
@@ -75,10 +75,12 @@ public class DucksGalore {
             ResourceLocation rubberDuckTexture = asResource("block/rubber_duck");
             ResourceLocation goldenRubberDuckTexture = asResource("block/golden_rubber_duck");
             ResourceLocation goldOreRubberDuckTexture = asResource("block/gold_ore_rubber_duck");
+            ResourceLocation emeraldRubberDuckTexture = asResource("block/emerald_rubber_duck");
             
             LOGGER.info("Rubber Duck texture: " + rubberDuckTexture);
             LOGGER.info("Golden Rubber Duck texture: " + goldenRubberDuckTexture);
             LOGGER.info("Gold Ore Rubber Duck texture: " + goldOreRubberDuckTexture);
+            LOGGER.info("Emerald Rubber Duck texture: " + emeraldRubberDuckTexture);
         });
     }
     

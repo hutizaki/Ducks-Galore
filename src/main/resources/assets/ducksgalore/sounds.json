@@ -13,11 +13,11 @@
             "ducksgalore:rubber_duck_block_event"
         ]
     },
-    "golden_duck_quack": {
+    "golden_rubber_duck_quack": {
         "category": "blocks",
         "subtitle": "golden_rubber_duck_quack.sub",
         "sounds": [
-            "ducksgalore:golden_duck_quack"
+            "ducksgalore:golden_rubber_duck_quack"
         ]
     },
     "golden_rubber_duck_block_event": {
@@ -27,18 +27,18 @@
             "ducksgalore:golden_rubber_duck_block_event"
         ]
     },
-    "gold_ore_rubber_duck_quack": {
+    "emerald_rubber_duck_quack": {
         "category": "blocks",
-        "subtitle": "gold_ore_rubber_duck_quack.sub",
+        "subtitle": "emerald_rubber_duck_quack.sub",
         "sounds": [
-            "ducksgalore:gold_ore_rubber_duck_quack"
+            "ducksgalore:emerald_rubber_duck_quack"
         ]
     },
-    "gold_ore_rubber_duck_block_event": {
+    "emerald_rubber_duck_block_event": {
         "category": "blocks",
-        "subtitle": "gold_ore_rubber_duck_block_event.sub",
+        "subtitle": "emerald_rubber_duck_block_event.sub",
         "sounds": [
-            "ducksgalore:gold_ore_rubber_duck_block_event"
+            "ducksgalore:emerald_rubber_duck_block_event"
         ]
     }
 }

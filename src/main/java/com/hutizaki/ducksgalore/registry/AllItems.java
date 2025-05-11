@@ -4,7 +4,7 @@ import com.hutizaki.ducksgalore.DucksGalore;
 import com.hutizaki.ducksgalore.content.ducks.items.GoldenRubberDuckItem;
 import com.hutizaki.ducksgalore.content.ducks.items.RubberDuckItem;
 import com.hutizaki.ducksgalore.content.ducks.items.GoldOreRubberDuckItem;
-
+import com.hutizaki.ducksgalore.content.ducks.items.EmeraldRubberDuckItem;
 import net.minecraft.world.item.Item;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
@@ -27,6 +27,9 @@ public class AllItems {
         
     public static final RegistryObject<Item> GOLD_ORE_RUBBER_DUCK = registerItem("gold_ore_rubber_duck",
         () -> new GoldOreRubberDuckItem(AllBlocks.GOLD_ORE_RUBBER_DUCK.get(), new Item.Properties()));
+
+    public static final RegistryObject<Item> EMERALD_RUBBER_DUCK = registerItem("emerald_rubber_duck",
+        () -> new EmeraldRubberDuckItem(AllBlocks.EMERALD_RUBBER_DUCK.get(), new Item.Properties()));
 
     /**
      * Helper method to register an item

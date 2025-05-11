@@ -26,6 +26,7 @@ public class AllCreativeModeTabs {
                 output.accept(AllBlocks.RUBBER_DUCK.get());
                 output.accept(AllBlocks.GOLDEN_RUBBER_DUCK.get());
                 output.accept(AllBlocks.GOLD_ORE_RUBBER_DUCK.get());
+                output.accept(AllBlocks.EMERALD_RUBBER_DUCK.get());
             })
             .build());
 
@@ -44,6 +45,7 @@ public class AllCreativeModeTabs {
             event.accept(AllBlocks.RUBBER_DUCK.get());
             event.accept(AllBlocks.GOLDEN_RUBBER_DUCK.get());
             event.accept(AllBlocks.GOLD_ORE_RUBBER_DUCK.get());
+            event.accept(AllBlocks.EMERALD_RUBBER_DUCK.get());
         }
     }
 } 

@@ -28,7 +28,6 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.SoundType;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -36,11 +35,11 @@ import javax.annotation.Nullable;
 /**
  * Golden Rubber Duck block implementation - a valuable variant with special abilities
  */
-public class GoldenRubberDuckBlock extends HorizontalDirectionalBlock {
+public class EmeraldRubberDuckBlock extends HorizontalDirectionalBlock {
     public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
     protected static final VoxelShape SHAPE = Block.box(4.0D, 0.0D, 4.0D, 12.0D, 8.0D, 12.0D);
     
-    public GoldenRubberDuckBlock(Properties properties) {
+    public EmeraldRubberDuckBlock(Properties properties) {
         super(properties);
         this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH));
     }
@@ -48,7 +47,7 @@ public class GoldenRubberDuckBlock extends HorizontalDirectionalBlock {
     /**
      * Static creator method based on Minecraft gold block properties
      */
-    public static Properties createGoldenRubberDuckProperties() {
+    public static Properties createEmeraldRubberDuckProperties() {
         return Properties.of()
             .strength(3.05F, 3.0F) // Instant break with proper tool
             .requiresCorrectToolForDrops() // Only drop with proper tool
@@ -89,11 +88,10 @@ public class GoldenRubberDuckBlock extends HorizontalDirectionalBlock {
         if (hand == InteractionHand.MAIN_HAND) {  // Only trigger for main hand
             if (!level.isClientSide) {
                 // Give player regeneration II and absorption II for 30 seconds (600 ticks)
-                player.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 600, 1));
-                player.addEffect(new MobEffectInstance(MobEffects.ABSORPTION, 1800, 1));
+                player.addEffect(new MobEffectInstance(MobEffects.HERO_OF_THE_VILLAGE, 600, 1));
                 
                 // Play golden rubber duck quack sound
-                level.playSound(null, pos, AllSoundEvents.GOLDEN_RUBBER_DUCK_QUACK.get(), SoundSource.BLOCKS, 1.5F, 
+                level.playSound(null, pos, AllSoundEvents.EMERALD_RUBBER_DUCK_QUACK.get(), SoundSource.BLOCKS, 1.5F, 
                                1.0F + (level.getRandom().nextFloat() * 0.1F));
                 
                 // Spawn some gold-colored particles
@@ -118,7 +116,7 @@ public class GoldenRubberDuckBlock extends HorizontalDirectionalBlock {
         if (!state.is(newState.getBlock())) {
             if (!level.isClientSide) {
                 // Play block event sound
-                level.playSound(null, pos, AllSoundEvents.GOLDEN_RUBBER_DUCK_BLOCK_EVENT.get(), SoundSource.BLOCKS, 1.5F, 
+                level.playSound(null, pos, AllSoundEvents.EMERALD_RUBBER_DUCK_BLOCK_EVENT.get(), SoundSource.BLOCKS, 1.5F, 
                               1.0F + (level.getRandom().nextFloat() * 0.1F));
             }
         }
@@ -129,7 +127,7 @@ public class GoldenRubberDuckBlock extends HorizontalDirectionalBlock {
     public void onPlace(BlockState state, Level level, BlockPos pos, BlockState oldState, boolean isMoving) {
         if (!level.isClientSide) {
             // Play block event sound
-            level.playSound(null, pos, AllSoundEvents.GOLDEN_RUBBER_DUCK_BLOCK_EVENT.get(), SoundSource.BLOCKS, 1.5F, 
+            level.playSound(null, pos, AllSoundEvents.EMERALD_RUBBER_DUCK_BLOCK_EVENT.get(), SoundSource.BLOCKS, 1.5F, 
                            1.0F + (level.getRandom().nextFloat() * 0.1F));
         } else {
             // Create particles on client side
@@ -176,14 +174,5 @@ public class GoldenRubberDuckBlock extends HorizontalDirectionalBlock {
                 random.nextDouble() * 0.1 - 0.05
             );
         }
-    }
-
-    /**
-     * Add a glowing property to the golden duck
-     */
-    @Override
-    public int getLightEmission(BlockState state, BlockGetter level, BlockPos pos) {
-        // Make the duck glow with a light level of 8 (subtle glow)
-        return 8;
     }
 } 

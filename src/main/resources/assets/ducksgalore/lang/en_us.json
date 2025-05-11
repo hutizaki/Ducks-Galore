@@ -1,8 +1,11 @@
 {  
 "block.ducksgalore.rubber_duck": "Rubber Duck",
 "item.ducksgalore.rubber_duck": "Rubber Duck",
+"block.ducksgalore.emerald_rubber_duck": "Emerald Rubber Duck",
+"item.ducksgalore.emerald_rubber_duck": "Emerald Rubber Duck",
 "block.ducksgalore.golden_rubber_duck": "Golden Rubber Duck",
 "item.ducksgalore.golden_rubber_duck": "Golden Rubber Duck",
+"item.ducksgalore.emerald_rubber_duck.tooltip": "Grants Hero of the Village when used",
 "item.ducksgalore.golden_rubber_duck.tooltip": "Grants Absorption when used",
 "golden_rubber_duck_quack": "Golden Rubber Duck Quacks",
 "golden_rubber_duck_quack.sub": "Golden Rubber Duck Quacking",
