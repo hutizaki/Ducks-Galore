@@ -2,7 +2,6 @@ package com.hutizaki.ducksgalore.client;
 
 import com.hutizaki.ducksgalore.DucksGalore;
 import com.hutizaki.ducksgalore.registry.AllBlocks;
-import com.hutizaki.ducksgalore.registry.AllItems;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraftforge.api.distmarker.Dist;
@@ -18,7 +17,7 @@ import org.slf4j.LoggerFactory;
  * Client-side initialization for Ducks Galore mod
  */
 @OnlyIn(Dist.CLIENT)
-@Mod.EventBusSubscriber(modid = DucksGalore.MOD_ID, value = Dist.CLIENT)
+@Mod.EventBusSubscriber(modid = DucksGalore.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public class DucksGaloreClient {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DucksGaloreClient.class);
@@ -37,14 +36,15 @@ public class DucksGaloreClient {
      * Register render types for blocks
      */
     @SubscribeEvent
-    public static void setupClient(final FMLClientSetupEvent event) {
+    public static void onClientSetup(FMLClientSetupEvent event) {
         event.enqueueWork(() -> {
             LOGGER.info("DucksGaloreClient: Setting up render types...");
             
-            // Set up render types for blocks
+            // Set render types for blocks
             ItemBlockRenderTypes.setRenderLayer(AllBlocks.RUBBER_DUCK.get(), RenderType.cutout());
             ItemBlockRenderTypes.setRenderLayer(AllBlocks.GOLDEN_RUBBER_DUCK.get(), RenderType.cutout());
             ItemBlockRenderTypes.setRenderLayer(AllBlocks.GOLD_ORE_RUBBER_DUCK.get(), RenderType.cutout());
+            ItemBlockRenderTypes.setRenderLayer(AllBlocks.EMERALD_RUBBER_DUCK.get(), RenderType.cutout());
         });
     }
 } 

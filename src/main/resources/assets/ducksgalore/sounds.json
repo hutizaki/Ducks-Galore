@@ -1,44 +1,38 @@
 {
-    "rubber_duck_quack": {
-        "category": "blocks",
-        "subtitle": "rubber_duck_quack.sub",
-        "sounds": [
-            "ducksgalore:rubber_duck_quack"
-        ]
-    },
-    "rubber_duck_block_event": {
-        "category": "blocks",
-        "subtitle": "rubber_duck_block_event.sub",
-        "sounds": [
-            "ducksgalore:rubber_duck_block_event"
-        ]
-    },
-    "golden_rubber_duck_quack": {
-        "category": "blocks",
-        "subtitle": "golden_rubber_duck_quack.sub",
-        "sounds": [
-            "ducksgalore:golden_rubber_duck_quack"
-        ]
-    },
-    "golden_rubber_duck_block_event": {
-        "category": "blocks",
-        "subtitle": "golden_rubber_duck_block_event.sub",
-        "sounds": [
-            "ducksgalore:golden_rubber_duck_block_event"
-        ]
-    },
-    "emerald_rubber_duck_quack": {
-        "category": "blocks",
-        "subtitle": "emerald_rubber_duck_quack.sub",
-        "sounds": [
-            "ducksgalore:emerald_rubber_duck_quack"
-        ]
-    },
-    "emerald_rubber_duck_block_event": {
-        "category": "blocks",
-        "subtitle": "emerald_rubber_duck_block_event.sub",
-        "sounds": [
-            "ducksgalore:emerald_rubber_duck_block_event"
-        ]
-    }
-}
+  "rubber_duck_quack": {
+    "category": "blocks",
+    "sounds": [
+      "ducksgalore:rubber_duck_quack"
+    ]
+  },
+  "rubber_duck_block_event": {
+    "category": "blocks",
+    "sounds": [
+      "ducksgalore:rubber_duck_block_event"
+    ]
+  },
+  "golden_rubber_duck_quack": {
+    "category": "blocks",
+    "sounds": [
+      "ducksgalore:golden_rubber_duck_quack"
+    ]
+  },
+  "golden_rubber_duck_block_event": {
+    "category": "blocks",
+    "sounds": [
+      "ducksgalore:golden_rubber_duck_block_event"
+    ]
+  },
+  "emerald_rubber_duck_quack": {
+    "category": "blocks",
+    "sounds": [
+      "ducksgalore:emerald_rubber_duck_quack"
+    ]
+  },
+  "emerald_rubber_duck_block_event": {
+    "category": "blocks",
+    "sounds": [
+      "ducksgalore:emerald_rubber_duck_block_event"
+    ]
+  }
+} 

@@ -1,0 +1,8 @@
+{
+    "variants": {
+        "facing=north": { "model": "ducksgalore:block/duck_template" },
+        "facing=east": { "model": "ducksgalore:block/duck_template", "y": 90 },
+        "facing=south": { "model": "ducksgalore:block/duck_template", "y": 180 },
+        "facing=west": { "model": "ducksgalore:block/duck_template", "y": 270 }
+    }
+} 

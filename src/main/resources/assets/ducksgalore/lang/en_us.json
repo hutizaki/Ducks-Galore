@@ -46,5 +46,15 @@
 "ponder.ducksgalore.gold_ore_duck.desc1": "The Gold Ore Rubber Duck is a rare treasure that brings good fortune to miners. It can only be found by mining gold ore.",
 "ponder.ducksgalore.gold_ore_duck.desc2": "This special duck has a 0.05% chance to drop when mining regular Gold Ore, and a 0.1% chance when mining Deepslate Gold Ore.",
 "ponder.ducksgalore.gold_ore_duck.desc3": "When right-clicked, the duck quacks and grants you Luck for 30 seconds, increasing your chances of finding treasure!",
-"ponder.ducksgalore.next_page": "[→] Next"
+"ponder.ducksgalore.next_page": "[→] Next",
+"ducksgalore.subtitle.rubber_duck_quack": "Rubber Duck Quacks",
+"ducksgalore.subtitle.rubber_duck_block_event": "Rubber Duck Block Interaction",
+"ducksgalore.subtitle.golden_rubber_duck_quack": "Golden Rubber Duck Quacks",
+"ducksgalore.subtitle.golden_rubber_duck_block_event": "Golden Rubber Duck Block Interaction",
+"ducksgalore.subtitle.emerald_rubber_duck_quack": "Emerald Rubber Duck Quacks",
+"ducksgalore.subtitle.emerald_rubber_duck_block_event": "Emerald Rubber Duck Block Interaction",
+"emerald_rubber_duck_quack": "Emerald Rubber Duck Quacks",
+"emerald_rubber_duck_quack.sub": "Emerald Rubber Duck Quacking",
+"emerald_rubber_duck_block_event": "Emerald Rubber Duck Block Interaction",
+"emerald_rubber_duck_block_event.sub": "Emerald Rubber Duck Block Interaction"
 }

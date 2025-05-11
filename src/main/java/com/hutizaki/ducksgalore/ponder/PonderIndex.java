@@ -1,7 +1,7 @@
 package com.hutizaki.ducksgalore.ponder;
 
 import com.hutizaki.ducksgalore.DucksGalore;
-import com.hutizaki.ducksgalore.registry.AllBlocks;
+import com.hutizaki.ducksgalore.registry.DucksGaloreRegistrate;
 import com.simibubi.create.foundation.ponder.PonderRegistrationHelper;
 
 import net.minecraft.resources.ResourceLocation;

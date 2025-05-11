@@ -1,7 +1,8 @@
 package com.hutizaki.ducksgalore.content.ducks.blocks;
 
 import com.hutizaki.ducksgalore.content.ducks.util.DuckEffects;
-import com.hutizaki.ducksgalore.registry.AllSoundEvents;
+import com.hutizaki.ducksgalore.registry.DucksGaloreRegistrate;
+import com.hutizaki.ducksgalore.registry.DucksGaloreSounds;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -84,17 +85,16 @@ public class EmeraldRubberDuckBlock extends HorizontalDirectionalBlock {
     @Override
     public InteractionResult use(@Nonnull BlockState state, @Nonnull Level level, @Nonnull BlockPos pos, 
                               @Nonnull Player player, @Nonnull InteractionHand hand, @Nonnull BlockHitResult hit) {
-        // Play golden rubber duck sound when right-clicked and apply effects
-        if (hand == InteractionHand.MAIN_HAND) {  // Only trigger for main hand
+        if (hand == InteractionHand.MAIN_HAND) {
             if (!level.isClientSide) {
-                // Give player regeneration II and absorption II for 30 seconds (600 ticks)
+                // Give player Hero of the Village effect for 30 seconds (600 ticks)
                 player.addEffect(new MobEffectInstance(MobEffects.HERO_OF_THE_VILLAGE, 600, 1));
                 
-                // Play golden rubber duck quack sound
-                level.playSound(null, pos, AllSoundEvents.EMERALD_RUBBER_DUCK_QUACK.get(), SoundSource.BLOCKS, 1.5F, 
+                // Play emerald rubber duck quack sound
+                level.playSound(null, pos, DucksGaloreSounds.EMERALD_RUBBER_DUCK_QUACK.get(), SoundSource.BLOCKS, 1.5F, 
                                1.0F + (level.getRandom().nextFloat() * 0.1F));
                 
-                // Spawn some gold-colored particles
+                // Spawn some emerald-colored particles
                 for (int i = 0; i < 8; i++) {
                     double offsetX = level.getRandom().nextDouble() * 0.5 - 0.25;
                     double offsetY = level.getRandom().nextDouble() * 0.5;
@@ -115,8 +115,7 @@ public class EmeraldRubberDuckBlock extends HorizontalDirectionalBlock {
     public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean isMoving) {
         if (!state.is(newState.getBlock())) {
             if (!level.isClientSide) {
-                // Play block event sound
-                level.playSound(null, pos, AllSoundEvents.EMERALD_RUBBER_DUCK_BLOCK_EVENT.get(), SoundSource.BLOCKS, 1.5F, 
+                level.playSound(null, pos, DucksGaloreSounds.EMERALD_RUBBER_DUCK_BLOCK_EVENT.get(), SoundSource.BLOCKS, 1.5F, 
                               1.0F + (level.getRandom().nextFloat() * 0.1F));
             }
         }
@@ -126,8 +125,7 @@ public class EmeraldRubberDuckBlock extends HorizontalDirectionalBlock {
     @Override
     public void onPlace(BlockState state, Level level, BlockPos pos, BlockState oldState, boolean isMoving) {
         if (!level.isClientSide) {
-            // Play block event sound
-            level.playSound(null, pos, AllSoundEvents.EMERALD_RUBBER_DUCK_BLOCK_EVENT.get(), SoundSource.BLOCKS, 1.5F, 
+            level.playSound(null, pos, DucksGaloreSounds.EMERALD_RUBBER_DUCK_BLOCK_EVENT.get(), SoundSource.BLOCKS, 1.5F, 
                            1.0F + (level.getRandom().nextFloat() * 0.1F));
         } else {
             // Create particles on client side
